@@ -53,7 +53,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 36px 0 34px;
+  padding: 80px 0 60px; /* was ~36px */
 }
 
 .logoShell {
@@ -103,20 +103,21 @@
 }
 
 .heroTitle {
-  max-width: 760px;
-  margin: 14px 0 0;
-  font-size: 42px;
-  line-height: 1.02;
-  font-weight: 800;
-  letter-spacing: -0.035em;
+  max-width: 720px;
+  margin: 16px auto 0;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  text-align: center;
 }
 
 .heroText {
-  max-width: 660px;
-  margin: 16px 0 0;
+  max-width: 560px; /* was 660 */
+  margin: 18px auto 0;
   color: #d5dee7;
-  font-size: 17px;
-  line-height: 1.68;
+  font-size: 16px;
+  line-height: 1.65;
 }
 
 .heroPills {

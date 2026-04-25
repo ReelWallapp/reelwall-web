@@ -57,7 +57,7 @@
 }
 
 .logoShell {
-  margin-bottom: 24px;
+  margin-bottom: 40px;
   padding: 14px;
   border-radius: 40px;
   background: linear-gradient(
@@ -96,7 +96,7 @@
 .sectionEyebrow {
   margin: 0;
   color: #f2c94c;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.2em;
   text-transform: uppercase;

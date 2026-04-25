@@ -403,40 +403,4 @@
   font-size: 16px;
 }
 
-/* HEADER */
-
-.header {
-  padding: 20px 0 14px;
-  border-bottom: 1px solid rgba(38, 79, 117, 0.25);
-}
-
-.headerRow {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.logoInline img {
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
-  padding: 6px;
-  background: rgba(11, 34, 57, 0.9);
-  border: 1px solid rgba(28, 70, 108, 0.4);
-}
-
-.headerEyebrow {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: #f2c94c;
-  margin: 0;
-}
-
-.headerTitle {
-  font-size: 20px;
-  font-weight: 800;
-  margin: 2px 0 0;
-}
-
 }

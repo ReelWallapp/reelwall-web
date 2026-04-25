@@ -13,7 +13,6 @@ type CollectionItem = {
   coverImageUri?: string | null;
   image_url?: string | null;
   created_at?: string | null;
-  is_public?: boolean | null;
 };
 
 type CollectionCatchLink = {
@@ -34,43 +33,30 @@ export default function CollectionsPage() {
   const loadCollections = async () => {
     try {
       setLoading(true);
-      setErrorMessage('');
 
-      const { data: collectionRows, error: collectionError } = await supabase
-  .from('collections')
-  .select('*')
-  .eq('is_public', true)
-  .order('created_at', { ascending: false });
+      const { data: collectionRows, error } = await supabase
+        .from('collections')
+        .select('*')
+        .eq('is_public', true)
+        .order('created_at', { ascending: false });
 
-      if (collectionError) {
-        throw collectionError;
-      }
+      if (error) throw error;
 
-      const nextCollections = (collectionRows || []) as CollectionItem[];
+      const nextCollections = collectionRows || [];
       setCollections(nextCollections);
 
-      const collectionIds = nextCollections.map((item) => item.id);
+      const ids = nextCollections.map((c) => c.id);
 
-      if (collectionIds.length > 0) {
-        const { data: linkRows, error: linkError } = await supabase
+      if (ids.length) {
+        const { data: linkRows } = await supabase
           .from('collection_catches')
           .select('collection_id, catch_id')
-          .in('collection_id', collectionIds);
+          .in('collection_id', ids);
 
-        if (linkError) {
-          console.log('Collection links load error:', linkError);
-          setLinks([]);
-        } else {
-          setLinks((linkRows || []) as CollectionCatchLink[]);
-        }
-      } else {
-        setLinks([]);
+        setLinks(linkRows || []);
       }
-    } catch (error: any) {
-      console.log('Collections page load error:', error);
-      setCollections([]);
-      setLinks([]);
-      setErrorMessage(error?.message || 'Could not load collections');
+    } catch (err: any) {
+      setErrorMessage(err.message);
     } finally {
       setLoading(false);
     }
@@ -78,162 +64,82 @@ export default function CollectionsPage() {
 
   const catchCountByCollection = useMemo(() => {
     const map: Record<string, number> = {};
-
-    for (const link of links) {
-      map[link.collection_id] = (map[link.collection_id] || 0) + 1;
-    }
-
+    links.forEach((l) => {
+      map[l.collection_id] = (map[l.collection_id] || 0) + 1;
+    });
     return map;
   }, [links]);
 
-  const getCollectionCover = (collection: CollectionItem) => {
-    return (
-      collection.cover_image_url ||
-      collection.coverImageUri ||
-      collection.image_url ||
-      '/logo.png'
-    );
-  };
+  const getCover = (c: CollectionItem) =>
+    c.cover_image_url || c.coverImageUri || c.image_url || '/logo.png';
 
-  const getCollectionCount = (collectionId: string) => {
-    return catchCountByCollection[collectionId] || 0;
-  };
+  const getCount = (id: string) => catchCountByCollection[id] || 0;
 
-  const formatDate = (value?: string | null) => {
-    if (!value) return '';
-
-    try {
-      const d = new Date(value);
-      if (Number.isNaN(d.getTime())) return '';
-      return d.toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-    } catch {
-      return '';
-    }
+  const formatDate = (val?: string | null) => {
+    if (!val) return '';
+    return new Date(val).toLocaleDateString();
   };
 
   return (
     <main className={styles.page}>
-      <section className={styles.hero}>
-        <div className={styles.heroGlowOne} />
-        <div className={styles.heroGlowTwo} />
-
+      
+      {/* 🔥 MINIMAL HEADER */}
+      <section className={styles.header}>
         <div className={styles.container}>
-          <div className={styles.heroInner}>
-            <Link href="/" className={styles.logoWrap}>
-  <img
-    src="/logo.png"
-    alt="ReelWall logo"
-    className={styles.logo}
-  />
-</Link>
+          <div className={styles.headerRow}>
+            
+            <Link href="/" className={styles.logoInline}>
+              <img src="/logo.png" alt="logo" />
+            </Link>
 
-            <p className={styles.eyebrow}>REELWALL PUBLIC COLLECTIONS</p>
-
-            <h1 className={styles.heroTitle}>
-              Explore Collections.
-              <br />
-              Keep the Story Going.
-            </h1>
-
-            <p className={styles.heroText}>
-              Browse public ReelWall collections and explore the catches, memories,
-              and trophy walls shared by the community.
-            </p>
-
-            <div className={styles.heroPills}>
-              <div className={styles.heroPill}>
-                <span className={styles.heroPillNumber}>{collections.length}</span>
-                <span className={styles.heroPillLabel}>collections</span>
-              </div>
-
-              <div className={styles.heroPill}>
-                <span className={styles.heroPillNumber}>{links.length}</span>
-                <span className={styles.heroPillLabel}>linked catches</span>
-              </div>
-
-              <div className={styles.heroPill}>
-                <span className={styles.heroPillNumber}>ReelWall</span>
-                <span className={styles.heroPillLabel}>public showcase</span>
-              </div>
+            <div>
+              <p className={styles.headerEyebrow}>Public Collections</p>
+              <h1 className={styles.headerTitle}>Explore Collections</h1>
             </div>
+
           </div>
         </div>
       </section>
 
+      {/* 🔥 COLLECTION GRID */}
       <section className={styles.section}>
         <div className={styles.container}>
-          <div className={styles.sectionHeader}>
-            <p className={styles.sectionEyebrow}>Collections</p>
-            <h2 className={styles.sectionTitle}>All Public Collections</h2>
-          </div>
 
           {errorMessage ? (
-            <div className={styles.stateCard}>
-              <div className={styles.stateTitle}>Could not load collections</div>
-              <div className={styles.stateText}>{errorMessage}</div>
-            </div>
+            <div className={styles.stateCard}>Error: {errorMessage}</div>
           ) : loading ? (
-            <div className={styles.stateCard}>
-              <div className={styles.stateTitle}>Loading collections...</div>
-              <div className={styles.stateText}>
-                Pulling in public collections from ReelWall.
-              </div>
-            </div>
+            <div className={styles.stateCard}>Loading collections...</div>
           ) : collections.length === 0 ? (
-            <div className={styles.stateCard}>
-              <div className={styles.stateTitle}>No collections yet</div>
-              <div className={styles.stateText}>
-                Public collections will appear here once they are available.
-              </div>
-            </div>
+            <div className={styles.stateCard}>No collections yet</div>
           ) : (
             <div className={styles.grid}>
-              {collections.map((collection) => {
-                const count = getCollectionCount(collection.id);
+              {collections.map((c) => {
+                const count = getCount(c.id);
 
                 return (
                   <Link
-                    key={collection.id}
-                    href={`/collections/${collection.id}`}
+                    key={c.id}
+                    href={`/collections/${c.id}`}
                     className={styles.card}
                   >
                     <div className={styles.cardMedia}>
-                      <img
-                        src={getCollectionCover(collection)}
-                        alt={collection.title}
-                        className={styles.cardImage}
-                      />
+                      <img src={getCover(c)} alt={c.title} />
                       <div className={styles.cardOverlay} />
-                      
+
+                      <div className={styles.badge}>
+                        {count} {count === 1 ? 'catch' : 'catches'}
+                      </div>
                     </div>
 
                     <div className={styles.cardBody}>
-                      <div className={styles.cardTopMeta}>
-                        <span className={styles.cardMetaPill}>
-                          {count} {count === 1 ? 'catch' : 'catches'}
-                        </span>
-
-                        {formatDate(collection.created_at) ? (
-                          <span className={styles.cardDate}>
-                            {formatDate(collection.created_at)}
-                          </span>
-                        ) : null}
-                      </div>
-
-                      <h3 className={styles.cardTitle}>{collection.title}</h3>
-
-                      <p className={styles.cardDescription}>
-                        {collection.description ||
-                          'A public ReelWall collection ready to explore.'}
+                      <h3>{c.title}</h3>
+                      <p>
+                        {c.description || 'Explore this ReelWall collection.'}
                       </p>
 
                       <div className={styles.cardFooter}>
-                        <span className={styles.cardMeta}>Open collection</span>
-                        <span className={styles.cardLink}>View →</span>
+                        <span>{formatDate(c.created_at)}</span>
+                        <span>View →</span>
                       </div>
                     </div>
                   </Link>

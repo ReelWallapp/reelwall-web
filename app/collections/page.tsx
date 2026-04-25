@@ -37,14 +37,12 @@ export default function CollectionsPage() {
       setErrorMessage('');
 
       const { data: collectionRows, error: collectionError } = await supabase
-  .from('collections')
-  .select('*')
-  .eq('is_public', true)
-  .order('created_at', { ascending: false });
+        .from('collections')
+        .select('*')
+        .eq('is_public', true)
+        .order('created_at', { ascending: false });
 
-      if (collectionError) {
-        throw collectionError;
-      }
+      if (collectionError) throw collectionError;
 
       const nextCollections = (collectionRows || []) as CollectionItem[];
       setCollections(nextCollections);
@@ -117,49 +115,18 @@ export default function CollectionsPage() {
 
   return (
     <main className={styles.page}>
-      <section className={styles.hero}>
-        <div className={styles.heroGlowOne} />
-        <div className={styles.heroGlowTwo} />
-
+      <section className={styles.heroCompact}>
         <div className={styles.container}>
-          <div className={styles.heroInner}>
+          <div className={styles.heroCompactInner}>
             <Link href="/" className={styles.logoWrap}>
-  <img
-    src="/logo.png"
-    alt="ReelWall logo"
-    className={styles.logo}
-  />
-</Link>
+              <img
+                src="/logo.png"
+                alt="ReelWall logo"
+                className={styles.logo}
+              />
+            </Link>
 
             <p className={styles.eyebrow}>REELWALL PUBLIC COLLECTIONS</p>
-
-            <h1 className={styles.heroTitle}>
-              Explore Collections.
-              <br />
-              Keep the Story Going.
-            </h1>
-
-            <p className={styles.heroText}>
-              Browse public ReelWall collections and explore the catches, memories,
-              and trophy walls shared by the community.
-            </p>
-
-            <div className={styles.heroPills}>
-              <div className={styles.heroPill}>
-                <span className={styles.heroPillNumber}>{collections.length}</span>
-                <span className={styles.heroPillLabel}>collections</span>
-              </div>
-
-              <div className={styles.heroPill}>
-                <span className={styles.heroPillNumber}>{links.length}</span>
-                <span className={styles.heroPillLabel}>linked catches</span>
-              </div>
-
-              <div className={styles.heroPill}>
-                <span className={styles.heroPillNumber}>ReelWall</span>
-                <span className={styles.heroPillLabel}>public showcase</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -208,7 +175,6 @@ export default function CollectionsPage() {
                         className={styles.cardImage}
                       />
                       <div className={styles.cardOverlay} />
-                      
                     </div>
 
                     <div className={styles.cardBody}>

@@ -127,11 +127,11 @@ export default function CatchDetailPage() {
           </p>
 
           <h1 className="text-4xl md:text-5xl font-extrabold leading-tight mb-3">
-            A Moment Saved on the Water
+            Wall-Worthy
           </h1>
 
           <p className="max-w-2xl text-gray-300 text-base md:text-lg leading-7">
-            Every fish has a story. This catch is part of a ReelWall collection.
+            Becasue some moments deserve more than a camera roll.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">

@@ -208,6 +208,22 @@ export default function CollectionsPage() {
             </div>
           )}
         </div>
+        return (
+  <main className={styles.page}>
+
+    {/* HEADER */}
+    <section className={styles.heroCompact}>
+      ...
+    </section>
+
+    {/* COLLECTIONS */}
+    <section className={styles.section}>
+      ...
+    </section>
+
+   
+  </main>
+);
       </section>
     </main>
   );

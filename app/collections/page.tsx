@@ -208,8 +208,7 @@ export default function CollectionsPage() {
             </div>
           )}
         </div>
-       
-    </section>
+       </section>
             
       <section className={styles.footerBand}>
         <div className={styles.container}>

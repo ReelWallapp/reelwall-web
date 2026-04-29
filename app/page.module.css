@@ -11,8 +11,6 @@ margin: 0 auto;
 padding: 0 24px;
 }
 
-/* ---------------- HERO ---------------- */
-
 .hero {
 position: relative;
 overflow: hidden;
@@ -121,8 +119,6 @@ color: #d7e2ec;
 font-size: 18px;
 line-height: 1.6;
 }
-
-/* Buttons */
 
 .heroActions {
   display: flex;
@@ -292,7 +288,6 @@ line-height: 1.6;
   }
 }
 
-/* ---------------- SECTIONS ---------------- */
 
 .section {
 padding: 42px 0;
@@ -307,7 +302,6 @@ font-size: 34px;
 font-weight: 900;
 }
 
-/* ---------------- STATE CARD ---------------- */
 
 .stateCard {
 border-radius: 28px;
@@ -323,8 +317,6 @@ inset 0 1px 0 rgba(255, 255, 255, 0.03);
 margin-top: 10px;
 color: #c0cedb;
 }
-
-/* ---------------- FEATURES ---------------- */
 
 .featureGrid {
 display: grid;
@@ -347,8 +339,6 @@ font-weight: 800;
 .featureText {
 color: #c0cedb;
 }
-
-/* ---------------- PREVIEW ---------------- */
 
 .previewStack {
   display: flex;
@@ -501,7 +491,6 @@ color: #c0cedb;
     font-size: 14px;
   }
 }
-/* ---------------- FOOTER ---------------- */
 
 .footer {
 padding: 30px 0;

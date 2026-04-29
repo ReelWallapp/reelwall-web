@@ -169,39 +169,33 @@ export default function CollectionsPage() {
                     className={styles.card}
                   >
                     <div className={styles.cardMedia}>
-                      <img
-                        src={getCollectionCover(collection)}
-                        alt={collection.title}
-                        className={styles.cardImage}
-                      />
-                      <div className={styles.cardOverlay} />
-                    </div>
+  <img
+    src={getCollectionCover(collection)}
+    alt={collection.title}
+    className={styles.cardImage}
+  />
+  <div className={styles.cardOverlay} />
+</div>
 
-                    <div className={styles.cardBody}>
-                      <div className={styles.cardTopMeta}>
-                        <span className={styles.cardMetaPill}>
-                          {count} {count === 1 ? 'catch' : 'catches'}
-                        </span>
+<div className={styles.cardBody}>
+  <div className={styles.cardTopMeta}>
+    <span className={styles.cardMetaPill}>
+      {count} {count === 1 ? 'catch' : 'catches'}
+    </span>
+  </div>
 
-                        {formatDate(collection.created_at) ? (
-                          <span className={styles.cardDate}>
-                            {formatDate(collection.created_at)}
-                          </span>
-                        ) : null}
-                      </div>
+  <h3 className={styles.cardTitle}>{collection.title}</h3>
 
-                      <h3 className={styles.cardTitle}>{collection.title}</h3>
+  <p className={styles.cardDescription}>
+    {collection.description ||
+      'A public ReelWall collection ready to explore.'}
+  </p>
 
-                      <p className={styles.cardDescription}>
-                        {collection.description ||
-                          'A public ReelWall collection ready to explore.'}
-                      </p>
-
-                      <div className={styles.cardFooter}>
-                        <span className={styles.cardMeta}>Open collection</span>
-                        <span className={styles.cardLink}>View →</span>
-                      </div>
-                    </div>
+  <div className={styles.cardFooter}>
+    <span className={styles.cardMeta}>Open collection</span>
+    <span className={styles.cardLink}>View →</span>
+  </div>
+</div>
                   </Link>
                 );
               })}

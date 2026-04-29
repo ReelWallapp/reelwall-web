@@ -1,1 +1,15 @@
-{ "redirects": [ { "source": "https://reelwall.app/:path*", "destination": "https://www.reelwall.app/:path*", "permanent": true } ] }
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "reelwall.app"
+        }
+      ],
+      "destination": "https://www.reelwall.app/:path*",
+      "permanent": true
+    }
+  ]
+}

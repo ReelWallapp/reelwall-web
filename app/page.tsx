@@ -116,8 +116,7 @@ export default function HomePage() {
             <div className={styles.footerBrand}>REELWALL</div>
 
             <p className={styles.footerText}>
-              A digital trophy wall for anglers to preserve catches, collections,
-              and the stories behind them.
+              A digital trophy wall for anglers to capture, organize, and share their catches and the stories behind them.
             </p>
 
             <div className={styles.footerLinks}>

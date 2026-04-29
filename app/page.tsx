@@ -1,64 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
 import styles from './page.module.css';
 
-type CollectionItem = {
-  id: string;
-  title: string;
-  description?: string | null;
-  cover_image_url?: string | null;
-  coverImageUri?: string | null;
-  image_url?: string | null;
-  created_at?: string | null;
-  is_public?: boolean | null;
-};
-
 export default function HomePage() {
-  const [collections, setCollections] = useState<CollectionItem[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadPreviewCollections();
-  }, []);
-
-  async function loadPreviewCollections() {
-    try {
-      setLoading(true);
-
-      const { data, error } = await supabase
-        .from('collections')
-        .select('*')
-        .eq('is_public', true)
-        .order('created_at', { ascending: false })
-        .limit(3);
-
-      if (error) {
-        console.log('Home preview load error:', error);
-        setCollections([]);
-        return;
-      }
-
-      setCollections((data || []) as CollectionItem[]);
-    } catch (error) {
-      console.log('Home page error:', error);
-      setCollections([]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function getCollectionCover(collection: CollectionItem) {
-    return (
-      collection.cover_image_url ||
-      collection.coverImageUri ||
-      collection.image_url ||
-      '/logo.png'
-    );
-  }
-
   return (
     <main className={styles.page}>
       <section className={styles.hero}>
@@ -86,14 +31,28 @@ export default function HomePage() {
             </h1>
 
             <p className={styles.heroText}>
-              ReelWall is where your catches and stories become a legacy — preserved and shared.
+              ReelWall is where your catches and stories become a legacy —
+              preserved and shared.
             </p>
 
             <div className={styles.heroActions}>
               <Link href="/collections" className={styles.primaryButton}>
                 Explore Public Collections
               </Link>
+
+              <button
+                type="button"
+                className={styles.secondaryButton}
+                disabled
+                aria-disabled="true"
+              >
+                Download the App
+              </button>
             </div>
+
+            <p className={styles.comingSoonText}>
+              iOS app coming soon.
+            </p>
 
             <div className={styles.heroPills}>
               <div className={styles.heroPill}>
@@ -111,66 +70,6 @@ export default function HomePage() {
                 <span className={styles.heroPillLabel}>your story</span>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.section}>
-        <div className={styles.container}>
-          <div className={styles.sectionHeader}>
-            <p className={styles.sectionEyebrow}>Featured</p>
-            <h2 className={styles.sectionTitle}>
-              Explore real catches from the ReelWall community
-            </h2>
-          </div>
-
-          {loading ? (
-            <div className={styles.stateCard}>
-              <div className={styles.stateText}>Loading recent collections...</div>
-            </div>
-          ) : collections.length === 0 ? (
-            <div className={styles.stateCard}>
-              <div className={styles.stateText}>
-                No public collections yet. They’ll appear here as soon as anglers start sharing.
-              </div>
-            </div>
-          ) : (
-            <div className={styles.previewStack}>
-              {collections.map((collection) => (
-                <Link
-                  key={collection.id}
-                  href={`/collections/${collection.id}`}
-                  className={styles.previewCard}
-                >
-                  <div className={styles.previewMedia}>
-                    <img
-                      src={getCollectionCover(collection)}
-                      alt={collection.title}
-                      className={styles.previewImage}
-                    />
-                    <div className={styles.previewOverlay} />
-                  </div>
-
-                  <div className={styles.previewBody}>
-                    <p className={styles.previewEyebrow}>Public Collection</p>
-
-                    <h3 className={styles.previewTitle}>{collection.title}</h3>
-
-                    <p className={styles.previewText}>
-                      {collection.description || 'Explore this public ReelWall collection.'}
-                    </p>
-
-                    <span className={styles.previewLink}>Open collection →</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-
-          <div className={styles.sectionActions}>
-            <Link href="/collections" className={styles.primaryButton}>
-              See All Public Collections
-            </Link>
           </div>
         </div>
       </section>
@@ -211,7 +110,7 @@ export default function HomePage() {
         </div>
       </section>
 
-           <footer className={styles.footer}>
+      <footer className={styles.footer}>
         <div className={styles.container}>
           <div className={styles.footerInner}>
             <div className={styles.footerBrand}>REELWALL</div>

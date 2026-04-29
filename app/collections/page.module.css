@@ -278,12 +278,6 @@
    MOBILE
 ========================= */
 
-@media (max-width: 1100px) {
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 760px) {
   .container {
     padding: 0 18px;
@@ -304,4 +298,42 @@
   .grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* =========================
+   FOOTER BAND
+========================= */
+
+.footerBand {
+  border-top: 1px solid rgba(38, 79, 117, 0.4);
+  background: #0a2238;
+  margin-top: 40px;
+}
+
+.footerBandInner {
+  text-align: center;
+  padding: 50px 0 60px;
+}
+
+.footerTitle {
+  margin: 8px 0 0;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.footerText {
+  max-width: 720px;
+  margin: 10px auto 0;
+  color: #9fb0c1;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.footerEyebrow {
+  margin: 0;
+  color: #f2c94c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
 }

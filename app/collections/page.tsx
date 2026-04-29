@@ -208,23 +208,22 @@ export default function CollectionsPage() {
             </div>
           )}
         </div>
-        return (
-  <main className={styles.page}>
-
-    {/* HEADER */}
-    <section className={styles.heroCompact}>
-      ...
-    </section>
-
-    {/* COLLECTIONS */}
-    <section className={styles.section}>
-      ...
-    </section>
-
-   
-  </main>
-);
+       
+      </section>
+            
+      <section className={styles.footerBand}>
+        <div className={styles.container}>
+          <div className={styles.footerBandInner}>
+            <p className={styles.footerEyebrow}>BUILT WITH REELWALL</p>
+            <h3 className={styles.footerTitle}>Every Fish Has a Story</h3>
+            <p className={styles.footerText}>
+              ReelWall helps anglers capture, organize, and showcase their best
+              catches as a digital trophy wall.
+            </p>
+          </div>
+        </div>
       </section>
     </main>
   );
 }
+  

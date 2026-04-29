@@ -262,18 +262,7 @@ export default function CollectionDetailPage() {
 
                     <div className={styles.cardBody}>
                       <div className={styles.cardTopMeta}>
-                        <span className={styles.cardMetaPill}>
-                          {formatDate(c.created_at) || 'Unknown date'}
-                        </span>
-
-                        <button
-                          onClick={() => toggleLike(c.id)}
-                          className={`${styles.likeButton} ${
-                            isLiked ? styles.likeButtonActive : ''
-                          }`}
-                        >
-                          {isLiked ? '♥ Liked' : '♡ Like'}
-                        </button>
+                        
                       </div>
 
                       <h3 className={styles.cardTitle}>

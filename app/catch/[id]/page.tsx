@@ -113,8 +113,6 @@ export default function CatchDetailPage() {
     <div className="min-h-screen bg-[#081E33] text-white">
       <section className="border-b border-[#163554] bg-gradient-to-b from-[#0D2942] to-[#081E33]">
         <div className="mx-auto max-w-5xl px-6 py-10 md:py-14">
-
-          {/* ✅ BACK BUTTON */}
           <button
             onClick={handleBack}
             className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#1C466C] bg-[#0D2942]/80 px-4 py-2 text-sm font-bold text-[#E6EEF7] backdrop-blur hover:border-[#F2C94C]/40 hover:text-[#F2C94C] transition"
@@ -141,20 +139,11 @@ export default function CatchDetailPage() {
               </div>
             ) : null}
 
-            <button
-              onClick={() => setLiked((prev) => !prev)}
-              className={`rounded-full px-4 py-2 text-sm font-extrabold transition ${
-                liked
-                  ? 'bg-[#F2C94C] text-[#0A2540]'
-                  : 'bg-[#12314F] text-white hover:opacity-90'
-              }`}
-            >
-              {liked ? '♥ Liked' : '♡ Like'}
-            </button>
+            
 
             <button
               onClick={shareCatch}
-              className="rounded-full bg-[#12314F] px-4 py-2 text-sm font-extrabold text-white hover:opacity-90 transition"
+              className="rounded-full bg-[#F2C94C] px-4 py-2 text-sm font-extrabold text-white hover:opacity-90 transition"
             >
               {shareCopied ? 'Link Copied ✓' : 'Share Catch'}
             </button>
@@ -165,11 +154,13 @@ export default function CatchDetailPage() {
       <section className="mx-auto max-w-5xl px-6 py-10">
         <div className="overflow-hidden rounded-3xl border border-[#163554] bg-[#102C47] shadow-lg">
           {catchItem.image_url ? (
-            <img
-              src={catchItem.image_url}
-              alt="Catch"
-              className="w-full max-h-[700px] object-cover"
-            />
+            <div className="w-full bg-[#081E33] flex items-center justify-center">
+              <img
+                src={catchItem.image_url}
+                alt="Catch"
+                className="w-full max-h-[700px] object-contain"
+              />
+            </div>
           ) : (
             <div className="w-full h-96 bg-[#163554] flex items-center justify-center text-gray-400">
               No image
@@ -178,12 +169,6 @@ export default function CatchDetailPage() {
 
           <div className="p-6">
             <div className="flex flex-wrap gap-3 mb-5">
-              {catchItem.created_at ? (
-                <div className="rounded-full bg-[#12314F] px-4 py-2 text-sm font-semibold text-white">
-                  {new Date(catchItem.created_at).toLocaleDateString()}
-                </div>
-              ) : null}
-
               {catchItem.place_name ? (
                 <div className="rounded-full bg-[#12314F] px-4 py-2 text-sm font-semibold text-white">
                   {catchItem.place_name}
@@ -197,7 +182,7 @@ export default function CatchDetailPage() {
               ) : null}
             </div>
 
-            <h2 className="text-2xl font-extrabold mb-3">Story</h2>
+            
 
             {catchItem.note ? (
               <p className="text-gray-300 text-base leading-8">

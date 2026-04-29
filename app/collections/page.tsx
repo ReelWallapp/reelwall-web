@@ -216,7 +216,7 @@ export default function CollectionsPage() {
             <p className={styles.footerEyebrow}>BUILT WITH REELWALL</p>
             <h3 className={styles.footerTitle}>Every Fish Has a Story</h3>
             <p className={styles.footerText}>
-              ReelWall helps anglers capture, organize, and showcase their best
+              ReelWall helps anglers capture, organize & showcase their best
               catches as a digital trophy wall.
             </p>
           </div>

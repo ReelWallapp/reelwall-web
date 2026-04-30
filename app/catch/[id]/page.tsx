@@ -73,6 +73,22 @@ export default function CatchDetailPage() {
     }
   };
 
+const getPublicImageUrl = (value?: string | null) => {
+  if (!value) return '';
+
+  if (value.startsWith('file://')) return '';
+
+  if (value.startsWith('http://') || value.startsWith('https://')) {
+    return value;
+  }
+
+  if (value.startsWith('/')) return value;
+
+  const cleanPath = value.replace(/^\/+/, '').replace(/^catches\//, '');
+
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
+};
+
   const weatherText =
     catchItem?.weather_temp !== undefined &&
     catchItem?.weather_temp !== null &&
@@ -156,7 +172,7 @@ export default function CatchDetailPage() {
           {catchItem.image_url ? (
             <div className="w-full bg-[#081E33] flex items-center justify-center">
               <img
-                src={catchItem.image_url}
+                src={getPublicImageUrl(catchItem.image_url)}
                 alt="Catch"
                 className="w-full max-h-[700px] object-contain"
               />

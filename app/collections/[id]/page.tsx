@@ -18,6 +18,7 @@ type CatchItem = {
   id: string;
   image_url?: string | null;
   created_at?: string | null;
+  catch_date?: string | null;
   place_name?: string | null;
   note?: string | null;
 };
@@ -66,7 +67,14 @@ export default function CollectionDetailPage() {
 
       const { data: catchesData, error: catchesError } = await supabase
         .from('catches')
-        .select('*')
+        .select(`
+          id,
+          image_url,
+          created_at,
+          catch_date,
+          place_name,
+          note
+        `)
         .in('id', catchIds)
         .order('created_at', { ascending: false });
 
@@ -110,21 +118,44 @@ export default function CollectionDetailPage() {
     }
   };
 
-  const formatDate = (value?: string | null) => {
-    if (!value) return '';
+  const getPublicImageUrl = (value?: string | null) => {
+  if (!value) return '';
 
-    try {
-      const d = new Date(value);
-      if (Number.isNaN(d.getTime())) return '';
-      return d.toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-    } catch {
-      return '';
+  if (value.startsWith('file://')) return '';
+
+  if (value.startsWith('http://') || value.startsWith('https://')) {
+    return value;
+  }
+
+  const cleanPath = value.replace(/^\/+/, '').replace(/^catches\//, '');
+
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
+};
+
+const getCatchDisplayDate = (item?: CatchItem | null) => {
+  if (!item) return '';
+  return item.catch_date || item.created_at || '';
+};
+
+const formatDate = (value?: string | null) => {
+  if (!value) return '';
+
+  try {
+    const d = new Date(value);
+
+    if (Number.isNaN(d.getTime())) {
+      return value;
     }
-  };
+
+    return d.toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  } catch {
+    return value;
+  }
+};
 
   if (loading) {
     return (
@@ -241,7 +272,7 @@ export default function CollectionDetailPage() {
           ) : (
             <div className={styles.grid}>
               {catches.map((c) => {
-                const isLiked = likedCatches.includes(c.id);
+                const displayDate = formatDate(getCatchDisplayDate(c));
 
                 return (
                   <article key={c.id} className={styles.card}>
@@ -249,10 +280,13 @@ export default function CollectionDetailPage() {
                       {c.image_url ? (
                         <div className={styles.cardMedia}>
                           <img
-                            src={c.image_url}
-                            alt="Catch"
-                            className={styles.cardImage}
-                          />
+  src={getPublicImageUrl(c.image_url)}
+  alt="Catch"
+  className={styles.cardImage}
+  onError={(e) => {
+    e.currentTarget.src = '/logo.png';
+  }}
+/>
                           <div className={styles.cardOverlay} />
                         </div>
                       ) : (
@@ -262,7 +296,9 @@ export default function CollectionDetailPage() {
 
                     <div className={styles.cardBody}>
                       <div className={styles.cardTopMeta}>
-                        
+                        {displayDate ? (
+                          <span className={styles.cardMeta}>{displayDate}</span>
+                        ) : null}
                       </div>
 
                       <h3 className={styles.cardTitle}>

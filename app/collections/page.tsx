@@ -24,7 +24,8 @@ type CollectionCatchLink = {
 export default function CollectionsPage() {
   const [collections, setCollections] = useState<CollectionItem[]>([]);
   const [links, setLinks] = useState<CollectionCatchLink[]>([]);
-  const [loading, setLoading] = useState(true);
+const [catches, setCatches] = useState<any[]>([]);
+const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
@@ -32,47 +33,59 @@ export default function CollectionsPage() {
   }, []);
 
   const loadCollections = async () => {
-    try {
-      setLoading(true);
-      setErrorMessage('');
+  try {
+    setLoading(true);
+    setErrorMessage('');
 
-      const { data: collectionRows, error: collectionError } = await supabase
-        .from('collections')
-        .select('*')
-        .eq('is_public', true)
-        .order('created_at', { ascending: false });
+    const { data: collectionRows, error: collectionError } = await supabase
+      .from('collections')
+      .select('*')
+      .eq('is_public', true)
+      .order('created_at', { ascending: false });
 
-      if (collectionError) throw collectionError;
+    if (collectionError) throw collectionError;
 
-      const nextCollections = (collectionRows || []) as CollectionItem[];
-      setCollections(nextCollections);
+    const nextCollections = (collectionRows || []) as CollectionItem[];
+    setCollections(nextCollections);
 
-      const collectionIds = nextCollections.map((item) => item.id);
+    const collectionIds = nextCollections.map((item) => item.id);
 
-      if (collectionIds.length > 0) {
-        const { data: linkRows, error: linkError } = await supabase
-          .from('collection_catches')
-          .select('collection_id, catch_id')
-          .in('collection_id', collectionIds);
+    if (collectionIds.length > 0) {
+      const { data: linkRows, error: linkError } = await supabase
+        .from('collection_catches')
+        .select('collection_id, catch_id')
+        .in('collection_id', collectionIds);
 
-        if (linkError) {
-          console.log('Collection links load error:', linkError);
-          setLinks([]);
-        } else {
-          setLinks((linkRows || []) as CollectionCatchLink[]);
-        }
-      } else {
+      if (linkError) {
+        console.log('Collection links load error:', linkError);
         setLinks([]);
+      } else {
+        setLinks((linkRows || []) as CollectionCatchLink[]);
       }
-    } catch (error: any) {
-      console.log('Collections page load error:', error);
-      setCollections([]);
+    } else {
       setLinks([]);
-      setErrorMessage(error?.message || 'Could not load collections');
-    } finally {
-      setLoading(false);
     }
-  };
+
+    const { data: catchRows, error: catchError } = await supabase
+      .from('catches')
+      .select('id, image_url');
+
+    if (catchError) {
+      console.log('Catches load error:', catchError);
+      setCatches([]);
+    } else {
+      setCatches(catchRows || []);
+    }
+  } catch (error: any) {
+    console.log('Collections page load error:', error);
+    setCollections([]);
+    setLinks([]);
+    setCatches([]);
+    setErrorMessage(error?.message || 'Could not load collections');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const catchCountByCollection = useMemo(() => {
     const map: Record<string, number> = {};
@@ -84,14 +97,48 @@ export default function CollectionsPage() {
     return map;
   }, [links]);
 
+  const catchesById = useMemo(() => {
+  const map: Record<string, any> = {};
+
+  catches.forEach((c) => {
+    map[c.id] = c;
+  });
+
+  return map;
+}, [catches]);
+
+  const getPublicImageUrl = (value?: string | null) => {
+  if (!value) return '';
+
+  if (value.startsWith('file://')) return '';
+
+  if (value.startsWith('http://') || value.startsWith('https://')) {
+    return value;
+  }
+
+  if (value.startsWith('/')) {
+    return value;
+  }
+
+  const cleanPath = value.replace(/^\/+/, '').replace(/^catches\//, '');
+
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
+};
   const getCollectionCover = (collection: CollectionItem) => {
-    return (
-      collection.cover_image_url ||
-      collection.coverImageUri ||
-      collection.image_url ||
-      '/logo.png'
-    );
-  };
+  const linked = links
+    .filter((l) => l.collection_id === collection.id)
+    .map((l) => catchesById[l.catch_id])
+    .filter(Boolean);
+
+  const raw =
+    collection.cover_image_url ||
+    linked[0]?.image_url ||
+    collection.coverImageUri ||
+    collection.image_url ||
+    '';
+
+  return getPublicImageUrl(raw) || '/logo.png';
+};
 
   const getCollectionCount = (collectionId: string) => {
     return catchCountByCollection[collectionId] || 0;
@@ -170,10 +217,13 @@ export default function CollectionsPage() {
                   >
                     <div className={styles.cardMedia}>
   <img
-    src={getCollectionCover(collection)}
-    alt={collection.title}
-    className={styles.cardImage}
-  />
+  src={getCollectionCover(collection)}
+  alt={collection.title}
+  className={styles.cardImage}
+  onError={(e) => {
+    e.currentTarget.src = '/logo.png';
+  }}
+/>
   <div className={styles.cardOverlay} />
 </div>
 

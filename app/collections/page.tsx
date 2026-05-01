@@ -107,7 +107,7 @@ const [loading, setLoading] = useState(true);
   return map;
 }, [catches]);
 
-  const getPublicImageUrl = (value?: string | null) => {
+ const getPublicImageUrl = (value?: string | null) => {
   if (!value) return '';
 
   if (value.startsWith('file://')) return '';
@@ -120,25 +120,39 @@ const [loading, setLoading] = useState(true);
     return value;
   }
 
-  const cleanPath = value.replace(/^\/+/, '').replace(/^catches\//, '');
+  const cleanPath = value
+  .replace(/^\/+/, '')
+  .replace(/^catches\//, '')
+  .replace(/^public\//, ''); // ✅ REMOVE WRONG FOLDER
+  
+
+  console.log('SUPABASE URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log('IMAGE PATH:', cleanPath);
 
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
 };
-  const getCollectionCover = (collection: CollectionItem) => {
+const getCollectionCover = (collection: CollectionItem) => {
   const linked = links
     .filter((l) => l.collection_id === collection.id)
     .map((l) => catchesById[l.catch_id])
     .filter(Boolean);
 
-  const raw =
-    collection.cover_image_url ||
-    linked[0]?.image_url ||
-    collection.coverImageUri ||
-    collection.image_url ||
-    '';
+  const candidates = [
+    collection.cover_image_url,
+    collection.coverImageUri,
+    collection.image_url,
+    ...linked.map((item) => item.image_url),
+  ];
 
-  return getPublicImageUrl(raw) || '/logo.png';
+  for (const value of candidates) {
+    const url = getPublicImageUrl(value);
+    if (url) return url;
+  }
+
+  return '/logo.png';
 };
+
+
 
   const getCollectionCount = (collectionId: string) => {
     return catchCountByCollection[collectionId] || 0;
@@ -207,6 +221,7 @@ const [loading, setLoading] = useState(true);
           ) : (
             <div className={styles.grid}>
               {collections.map((collection) => {
+                
                 const count = getCollectionCount(collection.id);
 
                 return (
@@ -216,11 +231,12 @@ const [loading, setLoading] = useState(true);
                     className={styles.card}
                   >
                     <div className={styles.cardMedia}>
-  <img
+ <img
   src={getCollectionCover(collection)}
   alt={collection.title}
   className={styles.cardImage}
   onError={(e) => {
+    console.log('FAILED IMAGE URL:', e.currentTarget.src); // 👈 ADD THIS
     e.currentTarget.src = '/logo.png';
   }}
 />

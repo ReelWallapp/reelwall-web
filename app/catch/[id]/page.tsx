@@ -56,7 +56,7 @@ export default function CatchDetailPage() {
 
       if (navigator.share) {
         await navigator.share({
-          title: 'ReelWall Catch',
+          title: 'ReelWall',
           text: 'Check out this catch on ReelWall',
           url,
         });
@@ -137,7 +137,7 @@ const getPublicImageUrl = (value?: string | null) => {
           </button>
 
           <p className="text-sm font-bold tracking-[0.2em] text-[#F2C94C] mb-3">
-            REELWALL CATCH
+            REELWALL
           </p>
 
           <h1 className="text-4xl md:text-5xl font-extrabold leading-tight mb-3">

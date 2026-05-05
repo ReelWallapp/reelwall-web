@@ -110,8 +110,8 @@ export default function PrivacyPage() {
               <h2>9. Contact</h2>
               <p>
                 Questions about this policy can be sent to{' '}
-                <a className={styles.link} href="mailto:support@reelwall.app">
-                  support@reelwall.app
+                <a className={styles.link} href="mailto:info@reelwall.app">
+                  info@reelwall.app
                 </a>.
               </p>
             </div>

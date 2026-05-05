@@ -117,8 +117,8 @@ export default function TermsPage() {
               <h2>10. Contact</h2>
               <p>
                 Questions about these terms can be sent to{' '}
-                <a className={styles.link} href="mailto:support@reelwall.app">
-                  support@reelwall.app
+                <a className={styles.link} href="mailto:info@reelwall.app">
+                  info@reelwall.app
                 </a>.
               </p>
             </div>

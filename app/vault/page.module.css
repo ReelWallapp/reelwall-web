@@ -1,0 +1,466 @@
+.page {
+  min-height: 100vh;
+  background: #081e33;
+  color: #f5f7fa;
+}
+
+.container {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 78px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(8, 30, 51, 0.9);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.brandLogo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  background: #081e33;
+  border-radius: 999px;
+}
+
+.appButton {
+  min-height: 48px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #081e33;
+  background: #f2c94c;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 14px 28px rgba(242, 201, 76, 0.2);
+}
+
+.appButton span:last-child {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.appButton strong {
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.appleIcon {
+  font-size: 23px;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 86px 0 80px;
+  text-align: center;
+  background:
+    radial-gradient(circle at top right, rgba(242, 201, 76, 0.13), transparent 25%),
+    radial-gradient(circle at bottom left, rgba(28, 70, 108, 0.32), transparent 36%),
+    linear-gradient(180deg, #071c31 0%, #081e33 100%);
+}
+
+.glowOne,
+.glowTwo {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.glowOne {
+  width: 420px;
+  height: 420px;
+  right: 8%;
+  top: 80px;
+  background: rgba(242, 201, 76, 0.12);
+}
+
+.glowTwo {
+  width: 480px;
+  height: 480px;
+  left: -160px;
+  bottom: -100px;
+  background: rgba(28, 70, 108, 0.34);
+}
+
+.eyebrow {
+  margin: 0 0 14px;
+  color: #f2c94c;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.vaultLogoWrap {
+  width: 118px;
+  height: 118px;
+  margin: 0 auto 22px;
+  border-radius: 32px;
+  background: #102c47;
+  border: 1px solid rgba(242, 201, 76, 0.24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.vaultLogo {
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+}
+
+.hero h1 {
+  max-width: 780px;
+  margin: 0 auto;
+  font-size: clamp(44px, 8vw, 76px);
+  line-height: 0.96;
+  font-weight: 950;
+  letter-spacing: -0.065em;
+}
+
+.heroText {
+  max-width: 680px;
+  margin: 24px auto 0;
+  color: #a5b3c2;
+  font-size: 19px;
+  line-height: 1.65;
+}
+
+.taglineWrap {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.taglineWrap span {
+  color: #a5b3c2;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.taglineWrap strong {
+  color: #f2c94c;
+  font-size: 18px;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+}
+
+.heroActions {
+  margin-top: 34px;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.primaryButton,
+.secondaryButton {
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.primaryButton {
+  background: linear-gradient(180deg, #f3cf63 0%, #f2c94c 100%);
+  color: #081e33;
+}
+
+.secondaryButton {
+  color: #ffffff;
+  background: rgba(11, 34, 57, 0.85);
+  border: 1px solid rgba(242, 201, 76, 0.25);
+}
+
+.promoText {
+  margin-top: 16px;
+  color: rgba(242, 201, 76, 0.75);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.section,
+.recordsSection,
+.infoSection {
+  padding: 78px 0;
+}
+
+.statusCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px;
+  border-radius: 28px;
+  background: #102c47;
+  border: 1px solid rgba(242, 201, 76, 0.24);
+  margin-bottom: 22px;
+}
+
+.cardLabel {
+  margin: 0 0 8px;
+  color: #f2c94c;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.statusCard h2,
+.recordsHeader h2 {
+  margin: 0 0 8px;
+  font-size: clamp(30px, 5vw, 48px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.statusCard p,
+.recordCopy p,
+.infoCard p {
+  color: #a5b3c2;
+  line-height: 1.65;
+}
+
+.countBox {
+  width: 112px;
+  height: 112px;
+  border-radius: 28px;
+  background: #081e33;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.countBox strong {
+  font-size: 34px;
+  line-height: 1;
+}
+
+.countBox span {
+  color: #8fa3b8;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.featureGrid,
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.featureCard,
+.infoCard {
+  border-radius: 24px;
+  background: rgba(16, 44, 71, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 24px;
+}
+
+.featureIcon {
+  font-size: 34px;
+}
+
+.featureCard h3,
+.infoCard h3,
+.recordCopy h3 {
+  margin: 16px 0 10px;
+  color: #ffffff;
+  font-size: 22px;
+  line-height: 1.12;
+}
+
+.featureCard p {
+  color: #a5b3c2;
+  line-height: 1.6;
+}
+
+.recordsSection {
+  background:
+    radial-gradient(circle at center right, rgba(242, 201, 76, 0.1), transparent 30%),
+    #081e33;
+}
+
+.recordsHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.privatePill {
+  border-radius: 999px;
+  padding: 10px 14px;
+  color: #e6edf3;
+  background: #163554;
+  font-size: 13px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.demoRecord {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 24px;
+  align-items: center;
+  padding: 24px;
+  border-radius: 30px;
+  background: #102c47;
+  border: 1px solid rgba(242, 201, 76, 0.2);
+}
+
+.recordImage {
+  min-height: 340px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at center, rgba(242, 201, 76, 0.14), transparent 36%),
+    #081e33;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recordImage img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+}
+
+.recordCopy {
+  padding: 12px;
+}
+
+.recordActions {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.recordActions span {
+  padding: 11px 15px;
+  border-radius: 999px;
+  background: #0b253d;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #f5f7fa;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.infoGrid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.infoBadge {
+  display: inline-flex;
+  margin: 0 0 12px;
+  background: #163554;
+  color: #f2c94c;
+  font-size: 11px;
+  font-weight: 850;
+  padding: 7px 11px;
+  border-radius: 999px;
+}
+
+.footer {
+  padding: 34px 0;
+  border-top: 1px solid rgba(38, 79, 117, 0.3);
+  background: #061421;
+}
+
+.footer a {
+  color: #f2c94c;
+  text-decoration: none;
+  font-weight: 900;
+}
+
+@media (max-width: 850px) {
+  .header {
+    padding: 0 16px;
+  }
+
+  .brand span {
+    display: none;
+  }
+
+  .hero {
+    padding-top: 64px;
+  }
+
+  .statusCard,
+  .recordsHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .featureGrid,
+  .infoGrid,
+  .demoRecord {
+    grid-template-columns: 1fr;
+  }
+
+  .recordImage {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 520px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .appButton {
+    padding: 8px 14px;
+  }
+
+  .heroActions {
+    flex-direction: column;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+}

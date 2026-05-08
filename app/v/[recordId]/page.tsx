@@ -58,7 +58,9 @@ export default async function VaultVerificationPage({ params }: PageProps) {
     );
   }
 
-  const imageUrl = getPublicImageUrl(record.image_url);
+  const imageUrl =
+  record.arweave_image_url ||
+  getPublicImageUrl(record.image_url);
   const location = record.place_name || record.region_name || 'Location private';
   const catchDate = record.catch_date ? formatDate(record.catch_date) : 'Catch date not provided';
   const preservedDate = record.created_at ? formatDate(record.created_at) : 'Date preserved';
@@ -135,6 +137,38 @@ export default async function VaultVerificationPage({ params }: PageProps) {
         </div>
       </section>
 
+      <div style={styles.permanentBox}>
+  <p style={styles.permanentTitle}>Permanent Proof Files</p>
+
+  <p style={styles.permanentText}>
+    These proof files are linked to the preserved image and public record.
+  </p>
+
+  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 14 }}>
+    {record.arweave_image_url && (
+      <a
+        href={record.arweave_image_url}
+        target="_blank"
+        rel="noreferrer"
+        style={styles.proofButton}
+      >
+        View Original Image Record
+      </a>
+    )}
+
+    {record.arweave_metadata_url && (
+      <a
+        href={record.arweave_metadata_url}
+        target="_blank"
+        rel="noreferrer"
+        style={styles.proofButton}
+      >
+        View Preservation Metadata
+      </a>
+    )}
+  </div>
+</div>
+
       <p style={styles.footer}>Verified by LiveWell Vault</p>
     </main>
   );
@@ -190,6 +224,21 @@ const styles: Record<string, React.CSSProperties> = {
     maxWidth: 460,
     fontWeight: 700,
   },
+
+proofButton: {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  background: '#163554',
+  color: '#F2C94C',
+  border: '1px solid rgba(242,201,76,0.28)',
+  borderRadius: 999,
+  padding: '12px 16px',
+  fontSize: 13,
+  fontWeight: 900,
+  textDecoration: 'none',
+},
+
   statusPill: {
     display: 'inline-block',
     color: PRIMARY,

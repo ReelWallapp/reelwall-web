@@ -11,7 +11,6 @@ export default function CatchDetailPage() {
 
   const [catchItem, setCatchItem] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [liked, setLiked] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
 
   useEffect(() => {
@@ -42,6 +41,56 @@ export default function CatchDetailPage() {
     }
   };
 
+  const copyToClipboard = async (url: string) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(url);
+      return;
+    }
+
+    const textArea = document.createElement('textarea');
+    textArea.value = url;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    document.execCommand('copy');
+    textArea.remove();
+  };
+
+  const shareCatch = async () => {
+    try {
+      const url = window.location.href;
+      const title = catchItem?.place_name || 'ReelWall Catch';
+      const text = catchItem?.note
+        ? `${catchItem.note.slice(0, 140)}${
+            catchItem.note.length > 140 ? '...' : ''
+          }`
+        : 'Check out this catch on ReelWall.';
+
+      if (navigator.share) {
+        await navigator.share({
+          title,
+          text,
+          url,
+        });
+
+        return;
+      }
+
+      await copyToClipboard(url);
+      setShareCopied(true);
+
+      setTimeout(() => {
+        setShareCopied(false);
+      }, 2500);
+    } catch (error) {
+      console.log('Share error:', error);
+    }
+  };
+
   const handleBack = () => {
     if (window.history.length > 1) {
       router.back();
@@ -50,44 +99,39 @@ export default function CatchDetailPage() {
     }
   };
 
-  const shareCatch = async () => {
-    try {
-      const url = window.location.href;
+  const getPublicImageUrl = (value?: string | null) => {
+    if (!value) return '';
 
-      if (navigator.share) {
-        await navigator.share({
-          title: 'ReelWall',
-          text: 'Check out this catch on ReelWall',
-          url,
-        });
-      } else {
-        await navigator.clipboard.writeText(url);
-        setShareCopied(true);
+    if (value.startsWith('file://')) return '';
 
-        setTimeout(() => {
-          setShareCopied(false);
-        }, 2500);
-      }
-    } catch (error) {
-      console.log('Share error:', error);
+    if (value.startsWith('http://') || value.startsWith('https://')) {
+      return value;
     }
+
+    if (value.startsWith('/')) return value;
+
+    const cleanPath = value.replace(/^\/+/, '').replace(/^catches\//, '');
+
+    return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
   };
 
-const getPublicImageUrl = (value?: string | null) => {
-  if (!value) return '';
+  const formatDate = (value?: string | null) => {
+    if (!value) return '';
 
-  if (value.startsWith('file://')) return '';
+    try {
+      const date = new Date(value);
 
-  if (value.startsWith('http://') || value.startsWith('https://')) {
-    return value;
-  }
+      if (Number.isNaN(date.getTime())) return value;
 
-  if (value.startsWith('/')) return value;
-
-  const cleanPath = value.replace(/^\/+/, '').replace(/^catches\//, '');
-
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
-};
+      return date.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    } catch {
+      return value;
+    }
+  };
 
   const weatherText =
     catchItem?.weather_temp !== undefined &&
@@ -96,137 +140,227 @@ const getPublicImageUrl = (value?: string | null) => {
       ? `${catchItem.weather_temp}°C • ${catchItem.weather_description}`
       : catchItem?.weather_description || '';
 
+  const displayDate = catchItem?.catch_date || catchItem?.created_at || '';
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#081E33] text-white flex items-center justify-center px-6">
-        <div className="text-center">
-          <p className="text-sm font-bold tracking-[0.2em] text-[#F2C94C] mb-2">
-            REELWALL
-          </p>
-          <h1 className="text-3xl font-extrabold">Loading catch...</h1>
-        </div>
-      </div>
+      <main className="min-h-screen bg-[#081E33] text-white">
+        <section className="flex min-h-screen items-center justify-center px-6">
+          <div className="rounded-[28px] border border-[#F2C94C]/20 bg-[#102C47] px-8 py-10 text-center shadow-2xl">
+            <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-[#F2C94C]">
+              REELWALL
+            </p>
+
+            <h1 className="text-3xl font-black tracking-[-0.04em]">
+              Loading catch...
+            </h1>
+
+            <p className="mt-3 text-sm font-semibold text-[#A5B3C2]">
+              Pulling in the story from the water.
+            </p>
+          </div>
+        </section>
+      </main>
     );
   }
 
   if (!catchItem) {
     return (
-      <div className="min-h-screen bg-[#081E33] text-white flex items-center justify-center px-6">
-        <div className="text-center">
-          <p className="text-sm font-bold tracking-[0.2em] text-[#F2C94C] mb-2">
-            REELWALL
-          </p>
-          <h1 className="text-3xl font-extrabold mb-3">Catch not found</h1>
-          <p className="text-gray-400">
-            This catch could not be loaded.
-          </p>
-        </div>
-      </div>
+      <main className="min-h-screen bg-[#081E33] text-white">
+        <section className="flex min-h-screen items-center justify-center px-6">
+          <div className="rounded-[28px] border border-[#F2C94C]/20 bg-[#102C47] px-8 py-10 text-center shadow-2xl">
+            <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-[#F2C94C]">
+              REELWALL
+            </p>
+
+            <h1 className="text-3xl font-black tracking-[-0.04em]">
+              Catch not found
+            </h1>
+
+            <p className="mt-3 text-sm font-semibold text-[#A5B3C2]">
+              This catch could not be loaded.
+            </p>
+          </div>
+        </section>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#081E33] text-white">
-      <section className="border-b border-[#163554] bg-gradient-to-b from-[#0D2942] to-[#081E33]">
-        <div className="mx-auto max-w-5xl px-6 py-10 md:py-14">
+    <main className="min-h-screen overflow-hidden bg-[#081E33] text-white">
+      <section className="relative overflow-hidden border-b border-[#264F75]/40 bg-gradient-to-b from-[#071C31] to-[#081E33]">
+        <div className="pointer-events-none absolute right-[8%] top-16 h-96 w-96 rounded-full bg-[#F2C94C]/10 blur-3xl" />
+        <div className="pointer-events-none absolute -right-32 top-64 h-[30rem] w-[30rem] rounded-full bg-[#1C466C]/30 blur-3xl" />
+
+        <div className="relative z-10 mx-auto max-w-6xl px-6 py-8 md:py-12">
           <button
+            type="button"
             onClick={handleBack}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#1C466C] bg-[#0D2942]/80 px-4 py-2 text-sm font-bold text-[#E6EEF7] backdrop-blur hover:border-[#F2C94C]/40 hover:text-[#F2C94C] transition"
+            className="mb-8 inline-flex min-h-11 items-center rounded-full border border-white/10 bg-[#04121F]/60 px-5 text-sm font-black text-[#E6EDF3] backdrop-blur transition hover:border-[#F2C94C]/30 hover:text-[#F2C94C]"
           >
             ← Back
           </button>
 
-          <p className="text-sm font-bold tracking-[0.2em] text-[#F2C94C] mb-3">
-            REELWALL
-          </p>
+          <div className="mx-auto max-w-4xl text-center">
+            <p className="mb-4 text-xs font-black uppercase tracking-[0.22em] text-[#F2C94C]">
+              REELWALL CATCH
+            </p>
 
-          <h1 className="text-4xl md:text-5xl font-extrabold leading-tight mb-3">
-            Wall-Worthy
-          </h1>
+            <h1 className="text-5xl font-black leading-[0.95] tracking-[-0.065em] md:text-7xl">
+              Wall-worthy.
+            </h1>
 
-          <p className="max-w-2xl text-gray-300 text-base md:text-lg leading-7">
-            Becasue some moments deserve more than a camera roll.
-          </p>
+            <p className="mx-auto mt-6 max-w-2xl text-lg font-medium leading-8 text-[#C0CEDB]">
+              Because some moments deserve more than a camera roll.
+            </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
-            {catchItem.is_personal_best ? (
-              <div className="rounded-full bg-[#F2C94C] px-4 py-2 text-sm font-extrabold text-[#0A2540]">
-                PERSONAL BEST
-              </div>
-            ) : null}
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              {catchItem.is_personal_best ? (
+                <span className="inline-flex min-h-11 items-center rounded-full bg-[#F2C94C] px-5 text-sm font-black uppercase tracking-wide text-[#081E33] shadow-lg shadow-[#F2C94C]/15">
+                  Personal Best
+                </span>
+              ) : null}
 
-            
+              {displayDate ? (
+                <span className="inline-flex min-h-11 items-center rounded-full border border-white/10 bg-[#04121F]/60 px-5 text-sm font-black text-[#E6EDF3]">
+                  {formatDate(displayDate)}
+                </span>
+              ) : null}
 
-            <button
-              onClick={shareCatch}
-              className="rounded-full bg-[#F2C94C] px-4 py-2 text-sm font-extrabold text-white hover:opacity-90 transition"
-            >
-              {shareCopied ? 'Link Copied ✓' : 'Share Catch'}
-            </button>
+              {catchItem.place_name ? (
+                <span className="inline-flex min-h-11 items-center rounded-full border border-white/10 bg-[#04121F]/60 px-5 text-sm font-black text-[#E6EDF3]">
+                  {catchItem.place_name}
+                </span>
+              ) : null}
+
+              <button
+                type="button"
+                onClick={shareCatch}
+                className="inline-flex min-h-11 items-center rounded-full bg-[#F2C94C] px-5 text-sm font-black text-[#081E33] shadow-lg shadow-[#F2C94C]/15 transition hover:-translate-y-0.5 hover:opacity-95"
+              >
+                {shareCopied ? 'Link Copied ✓' : 'Share Catch'}
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-6 py-10">
-        <div className="overflow-hidden rounded-3xl border border-[#163554] bg-[#102C47] shadow-lg">
+      <section className="mx-auto max-w-6xl px-6 py-10 md:py-14">
+        <div className="overflow-hidden rounded-[34px] border border-[#F2C94C]/20 bg-[#102C47] shadow-2xl shadow-black/20">
           {catchItem.image_url ? (
-            <div className="w-full bg-[#081E33] flex items-center justify-center">
+            <div className="flex w-full items-center justify-center bg-[#081E33] p-3 md:p-5">
               <img
                 src={getPublicImageUrl(catchItem.image_url)}
-                alt="Catch"
-                className="w-full max-h-[700px] object-contain"
+                alt="ReelWall catch"
+                className="max-h-[760px] w-full rounded-[24px] object-contain"
+                onError={(e) => {
+                  e.currentTarget.src = '/logo.png';
+                }}
               />
             </div>
           ) : (
-            <div className="w-full h-96 bg-[#163554] flex items-center justify-center text-gray-400">
+            <div className="flex h-96 w-full items-center justify-center bg-[#081E33] text-sm font-bold text-[#A5B3C2]">
               No image
             </div>
           )}
 
-          <div className="p-6">
-            <div className="flex flex-wrap gap-3 mb-5">
-              {catchItem.place_name ? (
-                <div className="rounded-full bg-[#12314F] px-4 py-2 text-sm font-semibold text-white">
-                  {catchItem.place_name}
-                </div>
-              ) : null}
+          <div className="grid gap-8 p-6 md:grid-cols-[0.85fr_1.15fr] md:p-8">
+            <div>
+              <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-[#F2C94C]">
+                Catch Details
+              </p>
 
-              {weatherText ? (
-                <div className="rounded-full bg-[#12314F] px-4 py-2 text-sm font-semibold text-white">
-                  {weatherText}
-                </div>
-              ) : null}
+              <div className="space-y-3">
+                {catchItem.place_name ? (
+                  <div className="rounded-2xl border border-white/5 bg-[#081E33]/70 p-4">
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8FA3B8]">
+                      Location
+                    </p>
+                    <p className="mt-1 text-base font-black text-white">
+                      {catchItem.place_name}
+                    </p>
+                  </div>
+                ) : null}
+
+                {displayDate ? (
+                  <div className="rounded-2xl border border-white/5 bg-[#081E33]/70 p-4">
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8FA3B8]">
+                      Date
+                    </p>
+                    <p className="mt-1 text-base font-black text-white">
+                      {formatDate(displayDate)}
+                    </p>
+                  </div>
+                ) : null}
+
+                {weatherText ? (
+                  <div className="rounded-2xl border border-white/5 bg-[#081E33]/70 p-4">
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8FA3B8]">
+                      Weather
+                    </p>
+                    <p className="mt-1 text-base font-black text-white">
+                      {weatherText}
+                    </p>
+                  </div>
+                ) : null}
+              </div>
             </div>
 
-            
+            <div>
+              <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-[#F2C94C]">
+                Story
+              </p>
 
-            {catchItem.note ? (
-              <p className="text-gray-300 text-base leading-8">
-                {catchItem.note}
-              </p>
-            ) : (
-              <p className="text-gray-500 text-base leading-8">
-                No note added for this catch yet.
-              </p>
-            )}
+              <div className="min-h-52 rounded-[24px] border border-white/5 bg-[#081E33]/70 p-5">
+                {catchItem.note ? (
+                  <p className="whitespace-pre-wrap text-base font-medium leading-8 text-[#D7E2EC]">
+                    {catchItem.note}
+                  </p>
+                ) : (
+                  <p className="text-base font-medium leading-8 text-[#8FA3B8]">
+                    No story added for this catch yet.
+                  </p>
+                )}
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={shareCatch}
+                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#F2C94C] px-5 text-sm font-black text-[#081E33] transition hover:-translate-y-0.5 hover:opacity-95"
+                >
+                  {shareCopied ? 'Link Copied ✓' : 'Share This Catch'}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleBack}
+                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#F2C94C]/25 bg-[#0B253D] px-5 text-sm font-black text-white transition hover:border-[#F2C94C]/45"
+                >
+                  Back to Collection
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="border-t border-[#163554]">
-        <div className="mx-auto max-w-5xl px-6 py-10 text-center">
-          <p className="text-sm font-bold tracking-[0.2em] text-[#F2C94C] mb-3">
+      <section className="border-t border-[#264F75]/40 bg-[#061421]">
+        <div className="mx-auto max-w-5xl px-6 py-12 text-center">
+          <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-[#F2C94C]">
             BUILT WITH REELWALL
           </p>
-          <h3 className="text-2xl md:text-3xl font-extrabold mb-3">
-            Preserve the Story, Not Just the Photo
+
+          <h3 className="text-3xl font-black tracking-[-0.045em] md:text-5xl">
+            Preserve the story, not just the photo.
           </h3>
-          <p className="max-w-2xl mx-auto text-gray-400 leading-7">
+
+          <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-8 text-[#9FB0C1]">
             ReelWall helps anglers capture, organize, and showcase real moments
             from the water.
           </p>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

@@ -30,8 +30,8 @@ export default function CollectionDetailPage() {
   const [collection, setCollection] = useState<CollectionItem | null>(null);
   const [catches, setCatches] = useState<CatchItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [likedCatches, setLikedCatches] = useState<string[]>([]);
   const [shareCopied, setShareCopied] = useState(false);
+  const [copiedCatchId, setCopiedCatchId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!collectionId) return;
@@ -49,6 +49,7 @@ export default function CollectionDetailPage() {
         .single();
 
       if (collectionError) throw collectionError;
+
       setCollection(collectionData as CollectionItem);
 
       const { data: links, error: linksError } = await supabase
@@ -67,14 +68,7 @@ export default function CollectionDetailPage() {
 
       const { data: catchesData, error: catchesError } = await supabase
         .from('catches')
-        .select(`
-          id,
-          image_url,
-          created_at,
-          catch_date,
-          place_name,
-          note
-        `)
+        .select('id, image_url, created_at, catch_date, place_name, note')
         .in('id', catchIds)
         .order('created_at', { ascending: false });
 
@@ -90,12 +84,22 @@ export default function CollectionDetailPage() {
     }
   };
 
-  const toggleLike = (catchId: string) => {
-    setLikedCatches((prev) =>
-      prev.includes(catchId)
-        ? prev.filter((id) => id !== catchId)
-        : [...prev, catchId]
-    );
+  const copyToClipboard = async (url: string) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(url);
+      return;
+    }
+
+    const textArea = document.createElement('textarea');
+    textArea.value = url;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    document.execCommand('copy');
+    textArea.remove();
   };
 
   const shareCollection = async () => {
@@ -105,57 +109,83 @@ export default function CollectionDetailPage() {
       if (navigator.share) {
         await navigator.share({
           title: collection?.title || 'ReelWall Collection',
-          text: 'Check out this ReelWall collection',
+          text: 'Check out this ReelWall collection.',
           url,
         });
-      } else {
-        await navigator.clipboard.writeText(url);
-        setShareCopied(true);
-        setTimeout(() => setShareCopied(false), 2500);
+        return;
       }
+
+      await copyToClipboard(url);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2500);
     } catch (error) {
       console.log('Share collection error:', error);
     }
   };
 
+  const shareCatch = async (item: CatchItem) => {
+    try {
+      const url = `${window.location.origin}/catch/${item.id}`;
+      const title = item.place_name || 'ReelWall Catch';
+      const text = item.note
+        ? `${item.note.slice(0, 120)}${item.note.length > 120 ? '...' : ''}`
+        : 'Check out this ReelWall catch.';
+
+      if (navigator.share) {
+        await navigator.share({
+          title,
+          text,
+          url,
+        });
+        return;
+      }
+
+      await copyToClipboard(url);
+      setCopiedCatchId(item.id);
+      setTimeout(() => setCopiedCatchId(null), 2500);
+    } catch (error) {
+      console.log('Share catch error:', error);
+    }
+  };
+
   const getPublicImageUrl = (value?: string | null) => {
-  if (!value) return '';
+    if (!value) return '';
 
-  if (value.startsWith('file://')) return '';
+    if (value.startsWith('file://')) return '';
 
-  if (value.startsWith('http://') || value.startsWith('https://')) {
-    return value;
-  }
-
-  const cleanPath = value.replace(/^\/+/, '').replace(/^catches\//, '');
-
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
-};
-
-const getCatchDisplayDate = (item?: CatchItem | null) => {
-  if (!item) return '';
-  return item.catch_date || item.created_at || '';
-};
-
-const formatDate = (value?: string | null) => {
-  if (!value) return '';
-
-  try {
-    const d = new Date(value);
-
-    if (Number.isNaN(d.getTime())) {
+    if (value.startsWith('http://') || value.startsWith('https://')) {
       return value;
     }
 
-    return d.toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  } catch {
-    return value;
-  }
-};
+    const cleanPath = value.replace(/^\/+/, '').replace(/^catches\//, '');
+
+    return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
+  };
+
+  const getCatchDisplayDate = (item?: CatchItem | null) => {
+    if (!item) return '';
+    return item.catch_date || item.created_at || '';
+  };
+
+  const formatDate = (value?: string | null) => {
+    if (!value) return '';
+
+    try {
+      const d = new Date(value);
+
+      if (Number.isNaN(d.getTime())) {
+        return value;
+      }
+
+      return d.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    } catch {
+      return value;
+    }
+  };
 
   if (loading) {
     return (
@@ -236,7 +266,11 @@ const formatDate = (value?: string | null) => {
             </div>
 
             <div className={styles.heroActions}>
-              <button onClick={shareCollection} className={styles.primaryButton}>
+              <button
+                type="button"
+                onClick={shareCollection}
+                className={styles.primaryButton}
+              >
                 {shareCopied ? 'Link Copied ✓' : 'Share Collection'}
               </button>
 
@@ -252,9 +286,11 @@ const formatDate = (value?: string | null) => {
         <div className={styles.container}>
           <div className={styles.sectionHeader}>
             <p className={styles.sectionEyebrow}>Collection Catches</p>
+
             <h2 className={styles.sectionTitle}>
               {catches.length === 0 ? 'No catches yet' : 'Collection Catches'}
             </h2>
+
             <p className={styles.sectionText}>
               {catches.length === 0
                 ? 'This collection does not have any catches to show yet.'
@@ -273,6 +309,7 @@ const formatDate = (value?: string | null) => {
             <div className={styles.grid}>
               {catches.map((c) => {
                 const displayDate = formatDate(getCatchDisplayDate(c));
+                const catchCopied = copiedCatchId === c.id;
 
                 return (
                   <article key={c.id} className={styles.card}>
@@ -280,13 +317,13 @@ const formatDate = (value?: string | null) => {
                       {c.image_url ? (
                         <div className={styles.cardMedia}>
                           <img
-  src={getPublicImageUrl(c.image_url)}
-  alt="Catch"
-  className={styles.cardImage}
-  onError={(e) => {
-    e.currentTarget.src = '/logo.png';
-  }}
-/>
+                            src={getPublicImageUrl(c.image_url)}
+                            alt="Catch"
+                            className={styles.cardImage}
+                            onError={(e) => {
+                              e.currentTarget.src = '/logo.png';
+                            }}
+                          />
                           <div className={styles.cardOverlay} />
                         </div>
                       ) : (
@@ -310,10 +347,17 @@ const formatDate = (value?: string | null) => {
                       </p>
 
                       <div className={styles.cardFooter}>
-                        <span className={styles.cardMeta}>Open catch</span>
                         <Link href={`/catch/${c.id}`} className={styles.cardLink}>
                           View →
                         </Link>
+
+                        <button
+                          type="button"
+                          onClick={() => shareCatch(c)}
+                          className={styles.shareButton}
+                        >
+                          {catchCopied ? 'Copied ✓' : 'Share'}
+                        </button>
                       </div>
                     </div>
                   </article>

@@ -182,7 +182,7 @@ export default function CollectionsPage() {
 
             <p className={styles.eyebrow}>REELWALL PUBLIC COLLECTIONS</p>
 
-            <h1 className={styles.heroTitle}>Curated fishing story walls.</h1>
+            <h1 className={styles.heroTitle}>Collections from time on the water.</h1>
 
             <p className={styles.heroText}>
               Explore public ReelWall collections built around trips, seasons,
@@ -190,10 +190,10 @@ export default function CollectionsPage() {
             </p>
 
             <div className={styles.heroPills}>
-              <span>🗂️ Collections</span>
-              <span>🎣 Stories</span>
-              <span>🏆 Mounted moments</span>
-            </div>
+  <span>Collections</span>
+  <span>Stories</span>
+  <span>Mounted Moments</span>
+</div>
           </div>
         </div>
       </section>

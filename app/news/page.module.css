@@ -235,6 +235,24 @@
   line-height: 1.65;
 }
 
+.comingSoonCard {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 34px;
+  padding: 42px;
+  text-decoration: none;
+  color: #ffffff;
+  background:
+    radial-gradient(circle at top right, rgba(242, 201, 76, 0.16), transparent 34%),
+    linear-gradient(135deg, rgba(242, 201, 76, 0.1), rgba(255, 255, 255, 0.035)),
+    #0b2239;
+  border: 1px solid rgba(242, 201, 76, 0.22);
+  box-shadow:
+    0 22px 60px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
 .comingSoonPill {
   position: relative;
   z-index: 1;

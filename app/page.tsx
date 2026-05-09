@@ -20,6 +20,7 @@ export default function HomePage() {
                   className={styles.navLogo}
                 />
               </span>
+
               <span>REELWALL</span>
             </Link>
 
@@ -46,21 +47,18 @@ export default function HomePage() {
 
             <div className={styles.flowPill}>
               <div className={styles.flowStep}>
-                <span className={styles.flowIcon}>📸</span>
                 <span>Capture</span>
               </div>
 
               <span className={styles.flowArrow}>→</span>
 
               <div className={styles.flowStepHighlight}>
-                <span className={styles.flowIcon}>🏆</span>
                 <span>Mount</span>
               </div>
 
               <span className={styles.flowArrow}>→</span>
 
               <div className={styles.flowStep}>
-                <span className={styles.flowIcon}>🔒</span>
                 <span>Vault</span>
               </div>
             </div>
@@ -79,7 +77,6 @@ export default function HomePage() {
 
             <div className={styles.heroActions}>
               <Link href="/collections" className={styles.primaryPill}>
-                <span className={styles.buttonIcon}>🗂️</span>
                 <span>
                   <strong>Explore</strong>
                   Public Collections
@@ -87,7 +84,6 @@ export default function HomePage() {
               </Link>
 
               <Link href="/vault" className={styles.secondaryPill}>
-                <span className={styles.buttonIcon}>🛡️</span>
                 <span>
                   <strong>LiveWell</strong>
                   Vault
@@ -100,7 +96,6 @@ export default function HomePage() {
                 disabled
                 aria-disabled="true"
               >
-                <span className={styles.buttonIcon}></span>
                 <span>
                   <strong>App Store</strong>
                   Coming Soon
@@ -115,35 +110,55 @@ export default function HomePage() {
         <div className={styles.container}>
           <div className={styles.sectionHeader}>
             <p className={styles.eyebrow}>THE REELWALL FLOW</p>
+
             <h2>From quick photo to lasting memory.</h2>
+
             <p>
-              Capture the moment. Tell the story. Mount what matters. Preserve what lasts.
+              Capture the moment. Tell the story. Mount what matters.
+              Preserve what lasts.
             </p>
           </div>
 
           <div className={styles.flowGrid}>
             <div className={styles.flowCard}>
               <span>01</span>
+
               <h3>Capture</h3>
-              <p>Save the photos, notes, dates, places, and fishing memories.</p>
+
+              <p>
+                Save the photos, notes, dates, places, and fishing memories.
+              </p>
             </div>
 
             <div className={styles.flowCard}>
               <span>02</span>
+
               <h3>Wall</h3>
-              <p>Your private space to organize and refine your fishing experiences.</p>
+
+              <p>
+                Your private space to organize and refine your fishing
+                experiences.
+              </p>
             </div>
 
             <div className={styles.flowCard}>
               <span>03</span>
+
               <h3>Mount</h3>
-              <p>Choose the moments worthy of your public trophy wall.</p>
+
+              <p>
+                Choose the moments worthy of your public trophy wall.
+              </p>
             </div>
 
             <div className={styles.flowCard}>
               <span>04</span>
+
               <h3>Vault</h3>
-              <p>Preserve special angling moments with verification and legacy.</p>
+
+              <p>
+                Preserve special angling moments with verification and legacy.
+              </p>
             </div>
           </div>
         </div>
@@ -153,35 +168,41 @@ export default function HomePage() {
         <div className={styles.container}>
           <div className={styles.previewGrid}>
             <Link href="/collections" className={styles.previewCard}>
-              <div className={styles.previewIcon}>🗂️</div>
               <p className={styles.eyebrow}>COLLECTIONS</p>
+
               <h3>Collections built from time on the water.</h3>
+
               <p>
-                Group angling experiences by trip, season, species, family memories, or the
-                moments that define your time on the water.
+                Group angling experiences by trip, season, species, family
+                memories, or the moments that define your time on the water.
               </p>
+
               <span>Explore Collections →</span>
             </Link>
 
             <Link href="/vault" className={styles.previewCard}>
-              <div className={styles.previewIcon}>🛡️</div>
               <p className={styles.eyebrow}>LIVEWELL VAULT</p>
+
               <h3>For the fishing moments that matter most.</h3>
+
               <p>
-                Vault special fishing memories with a verification page, certificate-ready
-                layout, and a stronger sense of permanence.
+                Vault special fishing memories with a verification page,
+                certificate-ready layout, and a stronger sense of permanence.
               </p>
+
               <span>View Vault →</span>
             </Link>
 
             <Link href="/news" className={styles.previewCard}>
-              <div className={styles.previewIcon}>📣</div>
               <p className={styles.eyebrow}>NEWS</p>
-              <h3>ReelWall updates and announcements.</h3>
+
+              <h3>Stories from the water.</h3>
+
               <p>
-                Follow product updates, launch notes, Vault improvements, and
-                featured community moments.
+                Follow product updates, founder notes, featured stories,
+                and community moments from ReelWall.
               </p>
+
               <span>Read News →</span>
             </Link>
           </div>
@@ -193,7 +214,9 @@ export default function HomePage() {
           <div className={styles.vaultPanel}>
             <div>
               <p className={styles.eyebrow}>BUILT FOR LEGACY</p>
+
               <h2>Not just another fishing feed.</h2>
+
               <p>
                 ReelWall is built around stories, memories, and meaningful
                 sharing — not clutter, noise, or endless scrolling.
@@ -212,6 +235,7 @@ export default function HomePage() {
           <div className={styles.footerInner}>
             <div>
               <div className={styles.footerBrand}>REELWALL</div>
+
               <p className={styles.footerText}>
                 Land the fish. Tell the story.
               </p>

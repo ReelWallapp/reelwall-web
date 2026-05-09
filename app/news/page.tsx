@@ -8,8 +8,8 @@ const stories = [
     tag: 'FOUNDERS NOTE',
     title: 'Why We Built ReelWall',
     text:
-      'Some fishing memories deserve more than a disappearing post. ReelWall was built for the moments, stories, and memories that stay with us.',
-    href: '#',
+      'Fishing memories deserve a better home. ReelWall was built by an angler for anglers — to preserve stories, moments, and memories from the water before they are lost over time.',
+    href: '/news/why-we-built-reelwall',
   },
   {
     tag: 'LIVEWELL VAULT',
@@ -84,20 +84,33 @@ export default function NewsPage() {
 
       <section className={styles.featuredSection}>
         <div className={styles.container}>
-          <div className={styles.comingSoonCard}>
-            
+          <Link
+            href="/news/why-we-built-reelwall"
+            className={styles.comingSoonCard}
+            style={{
+              textDecoration: 'none',
+            }}
+          >
+            <p className={styles.sectionEyebrow}>FEATURED NOTE</p>
 
-            <h2>News & Stories</h2>
+            <h2
+              style={{
+                marginTop: 14,
+              }}
+            >
+              Why We Built ReelWall
+            </h2>
 
             <p>
-              ReelWall News will feature stories from the water, featured
-              collections, product updates, and the moments behind the memories.
+              Fishing memories deserve a better home. ReelWall was built by an
+              angler for anglers — to preserve stories, moments, and memories
+              from the water before they are lost over time.
             </p>
 
             <div className={styles.comingSoonPill}>
-              News coming soon
+              Read Founder Story →
             </div>
-          </div>
+          </Link>
         </div>
       </section>
 

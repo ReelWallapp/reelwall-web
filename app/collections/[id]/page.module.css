@@ -429,6 +429,20 @@
   font-weight: 800;
 }
 
+.shareButton {
+  border: 0;
+  background: transparent;
+  color: #f2c94c;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  padding: 0;
+}
+
+.shareButton:hover {
+  opacity: 0.8;
+}
+
 .footerText {
   max-width: 720px;
   margin: 10px auto 0;

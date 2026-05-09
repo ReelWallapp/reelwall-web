@@ -1,9 +1,69 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 import styles from './page.module.css';
 
+type FeaturedMount = {
+  id: string;
+  image_url?: string | null;
+  note?: string | null;
+  catch_date?: string | null;
+  place_name?: string | null;
+  region_name?: string | null;
+  created_at?: string | null;
+  mounted_at?: string | null;
+};
+
 export default function HomePage() {
+  const [featuredMount, setFeaturedMount] = useState<FeaturedMount | null>(null);
+
+  useEffect(() => {
+    loadFeaturedMount();
+  }, []);
+
+  const loadFeaturedMount = async () => {
+    const { data, error } = await supabase
+      .from('catches')
+      .select('id, image_url, note, catch_date, place_name, region_name, created_at, mounted_at')
+      .eq('is_public', true)
+      .order('mounted_at', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.log('Featured mount load error:', error);
+      return;
+    }
+
+    setFeaturedMount(data);
+  };
+
+  const getPublicImageUrl = (value?: string | null) => {
+    if (!value) return '';
+
+    if (value.startsWith('file://')) return '';
+
+    if (value.startsWith('http://') || value.startsWith('https://')) {
+      return value;
+    }
+
+    if (value.startsWith('/')) {
+      return value;
+    }
+
+    const cleanPath = value
+      .replace(/^\/+/, '')
+      .replace(/^catches\//, '')
+      .replace(/^public\//, '');
+
+    return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
+  };
+
+  const featuredImage = getPublicImageUrl(featuredMount?.image_url);
+
   return (
     <main className={styles.page}>
       <section className={styles.hero}>
@@ -14,11 +74,7 @@ export default function HomePage() {
           <nav className={styles.nav}>
             <Link href="/" className={styles.brand}>
               <span className={styles.logoBadge}>
-                <img
-                  src="/logo.png"
-                  alt="ReelWall logo"
-                  className={styles.navLogo}
-                />
+                <img src="/logo.png" alt="ReelWall logo" className={styles.navLogo} />
               </span>
 
               <span>REELWALL</span>
@@ -34,11 +90,7 @@ export default function HomePage() {
 
           <div className={styles.heroInner}>
             <div className={styles.heroLogoWrap}>
-              <img
-                src="/logo.png"
-                alt="ReelWall logo"
-                className={styles.heroLogo}
-              />
+              <img src="/logo.png" alt="ReelWall logo" className={styles.heroLogo} />
             </div>
 
             <p className={styles.subtitle}>
@@ -91,20 +143,61 @@ export default function HomePage() {
               </Link>
 
               <a
-  href="https://apps.apple.com/ca/app/reelwall/id6763661886"
-  target="_blank"
-  rel="noopener noreferrer"
-  className={styles.downloadPill}
->
-  <span>
-    <strong>App Store</strong>
-    Download Now
-  </span>
-</a>
+                href="https://apps.apple.com/ca/app/reelwall/id6763661886"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.downloadPill}
+              >
+                <span>
+                  <strong>App Store</strong>
+                  Download Now
+                </span>
+              </a>
             </div>
           </div>
         </div>
       </section>
+
+      {featuredMount && (
+        <section className={styles.featuredMountSection}>
+          <div className={styles.container}>
+            <div className={styles.featuredMountPanel}>
+              <div className={styles.featuredMountImageWrap}>
+                <img
+                  src={featuredImage || '/logo.png'}
+                  alt="Featured ReelWall mount"
+                  className={styles.featuredMountImage}
+                  onError={(e) => {
+                    e.currentTarget.src = '/logo.png';
+                  }}
+                />
+              </div>
+
+              <div className={styles.featuredMountCopy}>
+                <p className={styles.eyebrow}>FEATURED MOUNT</p>
+
+                <h2>Moments worth mounting.</h2>
+
+                <p>
+                  {featuredMount.note ||
+                    'A public ReelWall mount from the water — captured, mounted, and remembered.'}
+                </p>
+
+                <div className={styles.featuredMountMeta}>
+                  {featuredMount.catch_date && <span>{featuredMount.catch_date}</span>}
+                  {(featuredMount.region_name || featuredMount.place_name) && (
+                    <span>{featuredMount.region_name || featuredMount.place_name}</span>
+                  )}
+                </div>
+
+                <Link href="/collections" className={styles.primaryButton}>
+                  Explore More Stories
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className={styles.section}>
         <div className={styles.container}>
@@ -122,87 +215,63 @@ export default function HomePage() {
           <div className={styles.flowGrid}>
             <div className={styles.flowCard}>
               <span>01</span>
-
               <h3>Capture</h3>
-
-              <p>
-                Save the photos, notes, dates, places, and fishing memories.
-              </p>
+              <p>Save the photos, notes, dates, places, and fishing memories.</p>
             </div>
 
             <div className={styles.flowCard}>
               <span>02</span>
-
               <h3>Wall</h3>
-
-              <p>
-                Your private space to organize and refine your fishing
-                experiences.
-              </p>
+              <p>Your private space to organize and refine your fishing experiences.</p>
             </div>
 
             <div className={styles.flowCard}>
               <span>03</span>
-
               <h3>Mount</h3>
-
-              <p>
-                Choose the moments worthy of your public trophy wall.
-              </p>
+              <p>Choose the moments worthy of your public trophy wall.</p>
             </div>
 
             <div className={styles.flowCard}>
               <span>04</span>
-
               <h3>Vault</h3>
-
-              <p>
-                Preserve special angling moments with verification and legacy.
-              </p>
+              <p>Preserve special angling moments with verification and legacy.</p>
             </div>
           </div>
         </div>
       </section>
+
+      
 
       <section className={styles.previewSection}>
         <div className={styles.container}>
           <div className={styles.previewGrid}>
             <Link href="/collections" className={styles.previewCard}>
               <p className={styles.eyebrow}>COLLECTIONS</p>
-
               <h3>Collections built from time on the water.</h3>
-
               <p>
                 Group angling experiences by trip, season, species, family
                 memories, or the moments that define your time on the water.
               </p>
-
               <span>Explore Collections →</span>
             </Link>
 
             <Link href="/vault" className={styles.previewCard}>
               <p className={styles.eyebrow}>LIVEWELL VAULT</p>
-
               <h3>For the fishing moments that matter most.</h3>
-
               <p>
                 Vault special fishing memories with a verification page,
                 certificate-ready layout, and a stronger sense of permanence.
               </p>
-
               <span>View Vault →</span>
             </Link>
 
             <Link href="/news" className={styles.previewCard}>
               <p className={styles.eyebrow}>NEWS</p>
-
               <h3>Stories from the water.</h3>
-
               <p>
                 Follow product updates, founder notes, featured stories,
                 and community moments from ReelWall.
               </p>
-
               <span>Read News →</span>
             </Link>
           </div>
@@ -214,9 +283,7 @@ export default function HomePage() {
           <div className={styles.vaultPanel}>
             <div>
               <p className={styles.eyebrow}>BUILT FOR LEGACY</p>
-
               <h2>Not just another fishing feed.</h2>
-
               <p>
                 ReelWall is built around stories, memories, and meaningful
                 sharing — not clutter, noise, or endless scrolling.
@@ -235,10 +302,7 @@ export default function HomePage() {
           <div className={styles.footerInner}>
             <div>
               <div className={styles.footerBrand}>REELWALL</div>
-
-              <p className={styles.footerText}>
-                Land the fish. Tell the story.
-              </p>
+              <p className={styles.footerText}>Land the fish. Tell the story.</p>
             </div>
 
             <div className={styles.footerLinks}>

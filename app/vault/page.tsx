@@ -92,7 +92,7 @@ export default function VaultPage() {
 
           <div className={styles.featureGrid}>
             <div className={styles.featureCard}>
-              <span className={styles.featureIcon}>🏆</span>
+              <span className={styles.featureIcon}></span>
               <h3>Mount first</h3>
               <p>
                 Vault is intentionally built for mounted catches — the moments
@@ -101,7 +101,7 @@ export default function VaultPage() {
             </div>
 
             <div className={styles.featureCard}>
-              <span className={styles.featureIcon}>🛡️</span>
+              <span className={styles.featureIcon}></span>
               <h3>Preserve the record</h3>
               <p>
                 Save the image, story, date, and location into a dedicated Vault
@@ -110,7 +110,7 @@ export default function VaultPage() {
             </div>
 
             <div className={styles.featureCard}>
-              <span className={styles.featureIcon}>🔎</span>
+              <span className={styles.featureIcon}></span>
               <h3>Verify and share</h3>
               <p>
                 Vault records can include certificate-style pages and QR-ready

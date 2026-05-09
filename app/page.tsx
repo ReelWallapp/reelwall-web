@@ -90,17 +90,17 @@ export default function HomePage() {
                 </span>
               </Link>
 
-              <button
-                type="button"
-                className={styles.downloadPill}
-                disabled
-                aria-disabled="true"
-              >
-                <span>
-                  <strong>App Store</strong>
-                  Coming Soon
-                </span>
-              </button>
+              <a
+  href="https://apps.apple.com/ca/app/reelwall/id6763661886"
+  target="_blank"
+  rel="noopener noreferrer"
+  className={styles.downloadPill}
+>
+  <span>
+    <strong>App Store</strong>
+    Download Now
+  </span>
+</a>
             </div>
           </div>
         </div>

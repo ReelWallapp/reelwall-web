@@ -57,6 +57,50 @@
   font-size: 12px;
   font-weight: 800;
   box-shadow: 0 14px 28px rgba(242, 201, 76, 0.2);
+}.appButton {
+  position: relative;
+  overflow: hidden;
+
+  min-height: 48px;
+  padding: 8px 18px;
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  color: #081e33;
+
+  background: linear-gradient(
+    135deg,
+    #f2c94c 0%,
+    #ffd95e 35%,
+    #f2c94c 70%,
+    #d6a92a 100%
+  );
+
+  text-decoration: none;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  border: 1px solid rgba(255, 217, 94, 0.4);
+
+  box-shadow:
+    0 16px 34px rgba(242, 201, 76, 0.26),
+    0 0 22px rgba(242, 201, 76, 0.14);
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.appButton:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 22px 42px rgba(242, 201, 76, 0.34),
+    0 0 28px rgba(242, 201, 76, 0.18);
 }
 
 .appButton span:last-child {
@@ -198,8 +242,36 @@
 }
 
 .primaryButton {
-  background: linear-gradient(180deg, #f3cf63 0%, #f2c94c 100%);
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(
+    135deg,
+    #f2c94c 0%,
+    #ffd95e 35%,
+    #f2c94c 70%,
+    #d6a92a 100%
+  );
+
   color: #081e33;
+
+  border: 1px solid rgba(255, 217, 94, 0.4);
+
+  box-shadow:
+    0 18px 40px rgba(242, 201, 76, 0.28),
+    0 0 24px rgba(242, 201, 76, 0.16);
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.primaryButton:hover {
+  transform: translateY(-3px) scale(1.02);
+
+  box-shadow:
+    0 24px 52px rgba(242, 201, 76, 0.4),
+    0 0 30px rgba(242, 201, 76, 0.2);
 }
 
 .secondaryButton {

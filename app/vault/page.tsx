@@ -12,7 +12,12 @@ export default function VaultPage() {
           <span>REELWALL</span>
         </Link>
 
-        <a href="#" className={styles.appButton} aria-disabled="true">
+       <a
+  href="https://apps.apple.com/ca/app/reelwall/id6763661886"
+  target="_blank"
+  rel="noopener noreferrer"
+  className={styles.appButton}
+>
           <span className={styles.appleIcon}></span>
           <span>
             <strong>App Store</strong>
@@ -49,7 +54,12 @@ export default function VaultPage() {
           </div>
 
           <div className={styles.heroActions}>
-            <a href="#" className={styles.primaryButton} aria-disabled="true">
+            <a
+  href="https://apps.apple.com/ca/app/reelwall/id6763661886"
+  target="_blank"
+  rel="noopener noreferrer"
+  className={styles.primaryButton}
+>
               Download on the App Store
             </a>
 

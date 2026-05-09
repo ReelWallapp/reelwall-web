@@ -81,11 +81,13 @@ export default function HomePage() {
             </Link>
 
             <div className={styles.navLinks}>
-              <Link href="/collections">Collections</Link>
-              <Link href="/vault">Vault</Link>
-              <Link href="/news">News</Link>
-              <Link href="/privacy">Privacy</Link>
-            </div>
+  <Link href="/collections">Collections</Link>
+  <Link href="/vault">Vault</Link>
+  <Link href="/news">News</Link>
+  <Link href="/about">About</Link>
+  <Link href="/contact">Contact</Link>
+  <Link href="/privacy">Privacy</Link>
+</div>
           </nav>
 
           <div className={styles.heroInner}>

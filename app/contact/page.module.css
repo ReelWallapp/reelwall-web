@@ -1,0 +1,203 @@
+.page {
+  min-height: 100vh;
+  background: #081e33;
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  padding: 120px 0 80px;
+  background:
+    radial-gradient(circle at top right, rgba(242, 201, 76, 0.13), transparent 26%),
+    radial-gradient(circle at bottom left, rgba(28, 70, 108, 0.36), transparent 34%),
+    linear-gradient(180deg, #071c31 0%, #081e33 100%);
+}
+
+.glowOne,
+.glowTwo {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.glowOne {
+  width: 420px;
+  height: 420px;
+  top: 80px;
+  right: 6%;
+  background: rgba(242, 201, 76, 0.12);
+}
+
+.glowTwo {
+  width: 480px;
+  height: 480px;
+  left: -160px;
+  bottom: -120px;
+  background: rgba(28, 70, 108, 0.34);
+}
+
+.eyebrow,
+.label {
+  margin: 0 0 16px;
+  color: #f2c94c;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.title {
+  max-width: 860px;
+  margin: 0;
+  font-size: clamp(44px, 8vw, 78px);
+  line-height: 0.96;
+  font-weight: 950;
+  letter-spacing: -0.065em;
+}
+
+.subtitle {
+  max-width: 720px;
+  margin: 24px 0 0;
+  color: #c0cedb;
+  font-size: 20px;
+  line-height: 1.65;
+}
+
+.contactCard {
+  margin-top: 42px;
+  padding: 34px;
+  border-radius: 34px;
+  background:
+    linear-gradient(135deg, rgba(242, 201, 76, 0.08), rgba(255, 255, 255, 0.03)),
+    #0b2239;
+  border: 1px solid rgba(242, 201, 76, 0.2);
+  box-shadow:
+    0 26px 70px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.contactRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.contactRow h2 {
+  margin: 0;
+  font-size: clamp(26px, 4vw, 38px);
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -0.045em;
+}
+
+.emailButton,
+.primaryButton {
+  min-height: 56px;
+  padding: 0 24px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.emailButton {
+  color: #ffffff;
+  background: rgba(11, 34, 57, 0.86);
+  border: 1px solid rgba(242, 201, 76, 0.28);
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, #f2c94c 0%, #ffd95e 45%, #f2c94c 100%);
+  color: #081e33;
+  border: 1px solid rgba(255, 217, 94, 0.45);
+  box-shadow:
+    0 18px 40px rgba(242, 201, 76, 0.28),
+    0 0 24px rgba(242, 201, 76, 0.14);
+}
+
+.divider {
+  height: 1px;
+  margin: 30px 0;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.footer {
+  padding: 34px 0;
+  border-top: 1px solid rgba(38, 79, 117, 0.3);
+  background: #061421;
+}
+
+.footerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.footerBrand {
+  color: #f2c94c;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+}
+
+.footerText {
+  margin: 8px 0 0;
+  color: #9fb0c2;
+}
+
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footerLinks a {
+  color: #d5dee7;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.footerLinks a:hover {
+  color: #f2c94c;
+}
+
+@media (max-width: 760px) {
+  .hero {
+    padding: 90px 0 70px;
+  }
+
+  .contactCard {
+    padding: 26px;
+  }
+
+  .contactRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .emailButton,
+  .primaryButton {
+    width: 100%;
+  }
+
+  .footerInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

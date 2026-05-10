@@ -62,7 +62,7 @@ export default async function VaultVerificationPage({ params }: PageProps) {
   record.arweave_image_url ||
   getPublicImageUrl(record.image_url);
   const location = record.place_name || record.region_name || 'Location private';
-  const catchDate = record.catch_date ? formatDate(record.catch_date) : 'Catch date not provided';
+  const catchDate = record.catch_date || 'Catch date not provided';
   const preservedDate = record.created_at ? formatDate(record.created_at) : 'Date preserved';
   const story = record.story?.trim() || 'A catch worth preserving.';
 
@@ -137,37 +137,7 @@ export default async function VaultVerificationPage({ params }: PageProps) {
         </div>
       </section>
 
-      <div style={styles.permanentBox}>
-  <p style={styles.permanentTitle}>Permanent Proof Files</p>
-
-  <p style={styles.permanentText}>
-    These proof files are linked to the preserved image and public record.
-  </p>
-
-  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 14 }}>
-    {record.arweave_image_url && (
-      <a
-        href={record.arweave_image_url}
-        target="_blank"
-        rel="noreferrer"
-        style={styles.proofButton}
-      >
-        View Original Image Record
-      </a>
-    )}
-
-    {record.arweave_metadata_url && (
-      <a
-        href={record.arweave_metadata_url}
-        target="_blank"
-        rel="noreferrer"
-        style={styles.proofButton}
-      >
-        View Preservation Metadata
-      </a>
-    )}
-  </div>
-</div>
+      
 
       <p style={styles.footer}>Verified by LiveWell Vault</p>
     </main>

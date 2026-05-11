@@ -40,7 +40,8 @@ export default function HomePage() {
     }
 
     setFeaturedMount(data);
-  };
+};
+   
 
   const getPublicImageUrl = (value?: string | null) => {
     if (!value) return '';
@@ -60,11 +61,12 @@ export default function HomePage() {
       .replace(/^catches\//, '')
       .replace(/^public\//, '');
 
-    return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
-  };
+   return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}?t=${Date.now()}`;
+};
 
-  const featuredImage = getPublicImageUrl(featuredMount?.image_url);
+const featuredImage = getPublicImageUrl(featuredMount?.image_url);
 
+ 
   return (
     <main className={styles.page}>
       <section className={styles.hero}>

@@ -25,13 +25,14 @@ export default function HomePage() {
 
   const loadFeaturedMount = async () => {
     const { data, error } = await supabase
-      .from('catches')
-      .select('id, image_url, note, catch_date, place_name, region_name, created_at, mounted_at')
-      .eq('is_public', true)
-      .order('mounted_at', { ascending: false, nullsFirst: false })
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+  .from('catches')
+  .select('id, image_url, note, catch_date, place_name, region_name, created_at, mounted_at')
+  .eq('is_public', true)
+  .not('image_url', 'is', null)
+  .order('mounted_at', { ascending: false, nullsFirst: false })
+  .order('created_at', { ascending: false })
+  .limit(1)
+  .maybeSingle();
 
     if (error) {
       console.log('Featured mount load error:', error);

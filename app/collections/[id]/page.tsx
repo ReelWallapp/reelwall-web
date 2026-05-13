@@ -8,6 +8,9 @@ type PageProps = {
   };
 };
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const SITE_URL = 'https://reelwall.app';
 
 const getPublicImageUrl = (value?: string | null) => {
@@ -21,10 +24,10 @@ const getPublicImageUrl = (value?: string | null) => {
 
   const cleanPath = value
   .replace(/^\/+/, '')
-  .replace(/^collections\//, '')
+  .replace(/^catches\//, '')
   .replace(/^public\//, '');
 
-return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/collections/${cleanPath}`;
+return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
 };
 
 export async function generateMetadata({

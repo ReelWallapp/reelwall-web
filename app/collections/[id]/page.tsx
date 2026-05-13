@@ -39,10 +39,11 @@ export async function generateMetadata({
     .single();
 
   let coverImage = getPublicImageUrl(
+  collection?.cover_image ||
     collection?.cover_image_url ||
-      collection?.coverImageUri ||
-      collection?.image_url
-  );
+    collection?.coverImageUri ||
+    collection?.image_url
+);
 
   if (!coverImage) {
     const { data: links } = await supabase

@@ -3,9 +3,9 @@ import CollectionDetailClient from './CollectionDetailClient';
 import { supabase } from '../../../lib/supabase';
 
 type PageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export const dynamic = 'force-dynamic';
@@ -35,7 +35,7 @@ const getPublicImageUrl = (value?: string | null) => {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const collectionId = params.id;
+  const { id: collectionId } = await params;
 
   const { data: collection } = await supabase
     .from('collections')
@@ -44,6 +44,18 @@ export async function generateMetadata({
     .single();
 
   const collectionAny = collection as any;
+
+  let profileName = '';
+
+  if (collectionAny?.user_id) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('display_name, username, avatar_url')
+      .eq('id', collectionAny.user_id)
+      .single();
+
+    profileName = profile?.display_name || profile?.username || '';
+  }
 
   let coverImage = getPublicImageUrl(
     collectionAny?.cover_image_url ||
@@ -78,7 +90,9 @@ export async function generateMetadata({
 
   const description =
     collectionAny?.description ||
-    'A fishing memory collection shared from ReelWall.';
+    (profileName
+      ? `A fishing memory collection shared by ${profileName} on ReelWall.`
+      : 'A fishing memory collection shared from ReelWall.');
 
   const image = coverImage || `${SITE_URL}/logo.png`;
   const url = `${SITE_URL}/collections/${collectionId}`;

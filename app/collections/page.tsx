@@ -5,6 +5,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import styles from './page.module.css';
 
+type ProfileItem = {
+  id?: string | null;
+  username?: string | null;
+  display_name?: string | null;
+  avatar_url?: string | null;
+};
+
 type CollectionItem = {
   id: string;
   title: string;
@@ -14,6 +21,7 @@ type CollectionItem = {
   image_url?: string | null;
   created_at?: string | null;
   is_public?: boolean | null;
+  user_id?: string | null;
 };
 
 type CollectionCatchLink = {
@@ -25,6 +33,7 @@ export default function CollectionsPage() {
   const [collections, setCollections] = useState<CollectionItem[]>([]);
   const [links, setLinks] = useState<CollectionCatchLink[]>([]);
   const [catches, setCatches] = useState<any[]>([]);
+  const [profilesMap, setProfilesMap] = useState<Record<string, ProfileItem>>({});
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -47,6 +56,38 @@ export default function CollectionsPage() {
 
       const nextCollections = (collectionRows || []) as CollectionItem[];
       setCollections(nextCollections);
+
+      const userIds = [
+        ...new Set(
+          nextCollections
+            .map((item) => item.user_id)
+            .filter(Boolean) as string[]
+        ),
+      ];
+
+      if (userIds.length > 0) {
+        const { data: profileRows, error: profileError } = await supabase
+          .from('profiles')
+          .select('id, username, display_name, avatar_url')
+          .in('id', userIds);
+
+        if (profileError) {
+          console.log('Profiles load error:', profileError);
+          setProfilesMap({});
+        } else {
+          const nextProfilesMap: Record<string, ProfileItem> = {};
+
+          (profileRows || []).forEach((profile: ProfileItem) => {
+            if (profile.id) {
+              nextProfilesMap[profile.id] = profile;
+            }
+          });
+
+          setProfilesMap(nextProfilesMap);
+        }
+      } else {
+        setProfilesMap({});
+      }
 
       const collectionIds = nextCollections.map((item) => item.id);
 
@@ -81,6 +122,7 @@ export default function CollectionsPage() {
       setCollections([]);
       setLinks([]);
       setCatches([]);
+      setProfilesMap({});
       setErrorMessage(error?.message || 'Could not load collections');
     } finally {
       setLoading(false);
@@ -126,6 +168,12 @@ export default function CollectionsPage() {
       .replace(/^public\//, '');
 
     return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
+  };
+
+  const getProfileName = (collection: CollectionItem) => {
+    const profile = profilesMap[collection.user_id || ''];
+
+    return profile?.display_name || profile?.username || '';
   };
 
   const getCollectionCover = (collection: CollectionItem) => {
@@ -190,10 +238,10 @@ export default function CollectionsPage() {
             </p>
 
             <div className={styles.heroPills}>
-  <span>Collections</span>
-  <span>Stories</span>
-  <span>Mounted Moments</span>
-</div>
+              <span>Collections</span>
+              <span>Stories</span>
+              <span>Mounted Moments</span>
+            </div>
           </div>
         </div>
       </section>
@@ -201,14 +249,11 @@ export default function CollectionsPage() {
       <section className={styles.section}>
         <div className={styles.container}>
           <div className={styles.sectionHeader}>
-  <div>
-    <p className={styles.sectionEyebrow}>Collections</p>
-    <h2 className={styles.sectionTitle}>All Public Collections</h2>
-  </div>
-</div>
-
-
-
+            <div>
+              <p className={styles.sectionEyebrow}>Collections</p>
+              <h2 className={styles.sectionTitle}>All Public Collections</h2>
+            </div>
+          </div>
 
           {errorMessage ? (
             <div className={styles.stateCard}>
@@ -233,6 +278,7 @@ export default function CollectionsPage() {
             <div className={styles.grid}>
               {collections.map((collection) => {
                 const count = getCollectionCount(collection.id);
+                const profileName = getProfileName(collection);
 
                 return (
                   <Link
@@ -260,6 +306,47 @@ export default function CollectionsPage() {
                     <div className={styles.cardBody}>
                       <p className={styles.cardEyebrow}>Public Collection</p>
 
+                     {profileName ? (
+  <div
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      marginTop: 4,
+      marginBottom: 4,
+    }}
+  >
+    <img
+      src={
+        profilesMap[collection.user_id || '']?.avatar_url ||
+        '/logo.png'
+      }
+      alt={profileName}
+      style={{
+        width: 28,
+        height: 28,
+        borderRadius: '50%',
+        objectFit: 'cover',
+        border: '2px solid rgba(242, 201, 76, 0.45)',
+        background: '#102C47',
+      }}
+      onError={(e) => {
+        e.currentTarget.src = '/logo.png';
+      }}
+    />
+
+    <p
+      style={{
+        margin: 0,
+        color: '#9FB0C2',
+        fontSize: 12,
+        fontWeight: 800,
+      }}
+    >
+      by {profileName}
+    </p>
+  </div>
+) : null}
                       <h3 className={styles.cardTitle}>{collection.title}</h3>
 
                       <p className={styles.cardDescription}>

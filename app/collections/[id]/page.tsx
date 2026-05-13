@@ -12,6 +12,8 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 const SITE_URL = 'https://reelwall.app';
+const SUPABASE_URL =
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://lkoiruiyweqhprkelopj.supabase.co';
 
 const getPublicImageUrl = (value?: string | null) => {
   if (!value) return '';
@@ -23,11 +25,11 @@ const getPublicImageUrl = (value?: string | null) => {
   }
 
   const cleanPath = value
-  .replace(/^\/+/, '')
-  .replace(/^catches\//, '')
-  .replace(/^public\//, '');
+    .replace(/^\/+/, '')
+    .replace(/^catches\//, '')
+    .replace(/^public\//, '');
 
-return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
+  return `${SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
 };
 
 export async function generateMetadata({
@@ -41,12 +43,14 @@ export async function generateMetadata({
     .eq('id', collectionId)
     .single();
 
+  const collectionAny = collection as any;
+
   let coverImage = getPublicImageUrl(
-  collection?.cover_image ||
-    collection?.cover_image_url ||
-    collection?.coverImageUri ||
-    collection?.image_url
-);
+    collectionAny?.cover_image_url ||
+      collectionAny?.cover_image ||
+      collectionAny?.coverImageUri ||
+      collectionAny?.image_url
+  );
 
   if (!coverImage) {
     const { data: links } = await supabase
@@ -68,18 +72,19 @@ export async function generateMetadata({
     }
   }
 
-  const title = collection?.title
-    ? `${collection.title} | ReelWall Collection`
+  const title = collectionAny?.title
+    ? `${collectionAny.title} | ReelWall Collection`
     : 'ReelWall Collection';
 
   const description =
-    collection?.description ||
+    collectionAny?.description ||
     'A fishing memory collection shared from ReelWall.';
 
   const image = coverImage || `${SITE_URL}/logo.png`;
   const url = `${SITE_URL}/collections/${collectionId}`;
 
   return {
+    metadataBase: new URL(SITE_URL),
     title,
     description,
     openGraph: {

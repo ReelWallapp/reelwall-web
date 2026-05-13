@@ -300,6 +300,7 @@
   justify-content: space-between;
   gap: 24px;
   padding: 28px;
+  align-items: stretch;
   border-radius: 28px;
   background: #102c47;
   border: 1px solid rgba(242, 201, 76, 0.24);
@@ -331,16 +332,108 @@
 }
 
 .countBox {
-  width: 112px;
-  height: 112px;
-  border-radius: 28px;
-  background: #081e33;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: 170px;
+  min-height: 150px;
+  padding: 16px 14px;
+
+  border-radius: 30px;
+
+  background:
+    radial-gradient(circle at top, rgba(255, 217, 94, 0.18), transparent 58%),
+    linear-gradient(180deg, #0b253d 0%, #081e33 100%);
+
+  border: 1px solid rgba(242, 201, 76, 0.45);
+
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
   flex-shrink: 0;
+  text-align: center;
+
+  box-shadow:
+    0 0 24px rgba(242, 201, 76, 0.2),
+    0 0 54px rgba(242, 201, 76, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.countBadge {
+  margin-bottom: 8px;
+
+  color: #f2c94c;
+
+  font-size: 9px;
+  font-weight: 950;
+
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.countBox strong {
+  color: #ffd95e;
+
+  font-size: 28px;
+  line-height: 1;
+
+  font-weight: 950;
+
+  text-shadow:
+    0 0 12px rgba(255, 217, 94, 0.45);
+}
+
+.countBox span {
+  margin-top: 6px;
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.countBox small {
+  margin-top: 8px;
+
+  color: #a5b3c2;
+
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.countBox:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 0 30px rgba(242, 201, 76, 0.26),
+    0 0 60px rgba(242, 201, 76, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.countBox strong {
+  color: #ffd95e;
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -0.04em;
+
+  text-shadow:
+    0 0 12px rgba(255, 217, 94, 0.45);
+}
+
+.countBox span {
+  margin-top: 4px;
+
+  color: #f5f7fa;
+
+  font-size: 12px;
+  font-weight: 850;
+  text-align: center;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .countBox strong {

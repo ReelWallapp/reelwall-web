@@ -44,7 +44,7 @@ export default function VaultPage() {
           <h1>Your Best Moments, Preserved.</h1>
 
           <p className={styles.heroText}>
-            LiveWell Vault is where your most meaningful ReelWall catches are
+            LiveWell Vault is where your most meaningful ReelWall angling memories are
             protected, verified, and ready to carry forward.
           </p>
 
@@ -79,15 +79,22 @@ export default function VaultPage() {
               <p className={styles.cardLabel}>MY VAULT</p>
               <h2>Vault Ready</h2>
               <p>
-                Choose from your mounted ReelWall catches and preserve the ones
+                Choose from your mounted ReelWall memories and preserve the ones
                 that matter most.
               </p>
             </div>
 
             <div className={styles.countBox}>
-              <strong>3</strong>
-              <span>free records</span>
-            </div>
+  <p className={styles.countBadge}>FOUNDING ANGLER BONUS</p>
+
+  <strong>3</strong>
+
+  <span>Vault Records</span>
+
+  <small>
+    Included during early access
+  </small>
+</div>
           </div>
 
           <div className={styles.featureGrid}>
@@ -144,9 +151,7 @@ export default function VaultPage() {
               <p className={styles.cardLabel}>VAULT CERTIFICATE</p>
               <h3>Every saved catch becomes a record.</h3>
               <p>
-                LiveWell Vault gives special catches a more permanent home —
-                connected to your ReelWall story, certificate view, and QR
-                verification.
+                LiveWell Vault gives special angling memories a preserved record designed to last beyond everyday storage and social feeds.
               </p>
 
               <div className={styles.recordActions}>
@@ -163,11 +168,35 @@ export default function VaultPage() {
           <div className={styles.infoGrid}>
             <div className={styles.infoCard}>
               <p className={styles.infoBadge}>WHY IT MATTERS</p>
-              <h3>Some moments deserve more than a post.</h3>
-              <p>
-                ReelWall is where your best moments become part of your story.
-                Vault is where you preserve the ones you never want to lose.
-              </p>
+<h3>Some moments deserve more than a post.</h3>
+
+<p>
+  All ReelWall angling memories are securely stored within the app.
+</p>
+
+<p>
+  LiveWell Vault adds an additional preservation layer for the
+  moments that matter most.
+</p>
+
+<p>
+  When a moment is vaulted, ReelWall creates a preserved snapshot
+  of the image, story, catch date, and details exactly as they
+  existed at that moment in time.
+</p>
+
+<p>
+  Unlike ordinary storage or social posts that can become buried,
+  altered, compressed, or lost over time, vaulted records are
+  preserved with independent verification, unique record IDs,
+  certificate pages, preservation timestamps, and long-term
+  preservation records.
+</p>
+
+<p>
+  Think of it less like saving a photo — and more like preserving
+  a fishing memory.
+</p>
             </div>
 
             <div className={styles.infoCard}>

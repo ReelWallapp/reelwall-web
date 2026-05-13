@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import QRCode from 'react-qr-code';
 import { useParams } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
 import styles from './page.module.css';
@@ -32,6 +33,13 @@ export default function CollectionDetailClient() {
   const [loading, setLoading] = useState(true);
   const [shareCopied, setShareCopied] = useState(false);
   const [copiedCatchId, setCopiedCatchId] = useState<string | null>(null);
+  const [qrOpen, setQrOpen] = useState(false);
+  const [qrCopied, setQrCopied] = useState(false);
+
+  const qrRef = useRef<HTMLDivElement | null>(null);
+
+  const collectionUrl =
+    typeof window !== 'undefined' ? window.location.href : '';
 
   useEffect(() => {
     if (!collectionId) return;
@@ -122,6 +130,113 @@ export default function CollectionDetailClient() {
       setTimeout(() => setShareCopied(false), 2500);
     } catch (error) {
       console.log('Share collection error:', error);
+    }
+  };
+
+  const copyCollectionLink = async () => {
+    try {
+      await copyToClipboard(collectionUrl);
+      setQrCopied(true);
+      setTimeout(() => setQrCopied(false), 2500);
+    } catch (error) {
+      console.log('Copy QR link error:', error);
+    }
+  };
+
+  const downloadQrCode = () => {
+    try {
+      const svg = qrRef.current?.querySelector('svg');
+      if (!svg) return;
+
+      const serializer = new XMLSerializer();
+      const svgString = serializer.serializeToString(svg);
+      const blob = new Blob([svgString], {
+        type: 'image/svg+xml;charset=utf-8',
+      });
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+
+      a.href = url;
+      a.download = `${collection?.title || 'reelwall-collection'}-qr.svg`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.log('Download QR error:', error);
+    }
+  };
+
+  const printQrCode = () => {
+    try {
+      const svg = qrRef.current?.querySelector('svg');
+      if (!svg) return;
+
+      const serializer = new XMLSerializer();
+      const svgString = serializer.serializeToString(svg);
+      const printWindow = window.open('', '_blank');
+
+      if (!printWindow) return;
+
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>ReelWall Collection QR</title>
+            <style>
+              body {
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: Arial, sans-serif;
+                background: #ffffff;
+                color: #081E33;
+              }
+              .card {
+                text-align: center;
+                padding: 32px;
+              }
+              h1 {
+                margin: 0 0 8px;
+                font-size: 28px;
+              }
+              p {
+                margin: 8px 0 20px;
+                font-size: 15px;
+              }
+              .qr {
+                display: inline-block;
+                padding: 18px;
+                border: 1px solid #e5e7eb;
+                border-radius: 18px;
+              }
+              .url {
+                margin-top: 18px;
+                font-size: 12px;
+                color: #555;
+                word-break: break-all;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="card">
+              <h1>${collection?.title || 'ReelWall Collection'}</h1>
+              <p>Scan to view this ReelWall collection</p>
+              <div class="qr">${svgString}</div>
+              <div class="url">${collectionUrl}</div>
+            </div>
+          </body>
+        </html>
+      `);
+
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+    } catch (error) {
+      console.log('Print QR error:', error);
     }
   };
 
@@ -284,6 +399,239 @@ export default function CollectionDetailClient() {
               <Link href="/collections" className={styles.secondaryButton}>
                 Browse More
               </Link>
+            </div>
+
+            <div
+              style={{
+                marginTop: 20,
+                width: '100%',
+                maxWidth: 460,
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setQrOpen((current) => !current)}
+                style={{
+                  width: '100%',
+                  border: '1px solid rgba(242, 201, 76, 0.18)',
+                  background: 'rgba(8, 30, 51, 0.78)',
+                  backdropFilter: 'blur(12px)',
+                  color: '#F5F7FA',
+                  borderRadius: 999,
+                  padding: '16px 20px',
+                  fontSize: 15,
+                  fontWeight: 900,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 12,
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.16)',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 12,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 34,
+                      height: 34,
+                      borderRadius: 999,
+                      background: 'rgba(242, 201, 76, 0.12)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#F2C94C',
+                      fontSize: 16,
+                      fontWeight: 900,
+                    }}
+                  >
+                    QR
+                  </div>
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 15,
+                        fontWeight: 900,
+                        lineHeight: 1,
+                      }}
+                    >
+                      QR Share Card
+                    </span>
+
+                    <span
+                      style={{
+                        marginTop: 4,
+                        color: '#8FA3B8',
+                        fontSize: 11,
+                        fontWeight: 700,
+                        letterSpacing: '0.04em',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      Download • Print • Share
+                    </span>
+                  </div>
+                </div>
+
+                <span
+                  style={{
+                    color: '#F2C94C',
+                    fontSize: 18,
+                    fontWeight: 900,
+                    lineHeight: 1,
+                  }}
+                >
+                  {qrOpen ? '−' : '+'}
+                </span>
+              </button>
+
+              {qrOpen ? (
+                <div
+                  style={{
+                    marginTop: 14,
+                    border: '1px solid rgba(242, 201, 76, 0.2)',
+                    background:
+                      'linear-gradient(180deg, rgba(13, 41, 67, 0.98), rgba(8, 30, 51, 0.98))',
+                    borderRadius: 28,
+                    padding: 20,
+                    boxShadow: '0 18px 42px rgba(0,0,0,0.24)',
+                    textAlign: 'center',
+                  }}
+                >
+                  <div
+                    ref={qrRef}
+                    style={{
+                      background: '#ffffff',
+                      color: '#081E33',
+                      borderRadius: 24,
+                      padding: 20,
+                    }}
+                  >
+                    <p
+                      style={{
+                        margin: 0,
+                        color: '#081E33',
+                        fontSize: 11,
+                        fontWeight: 900,
+                        letterSpacing: '0.16em',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      ReelWall Collection
+                    </p>
+
+                    <h3
+                      style={{
+                        margin: '8px 0 16px',
+                        color: '#081E33',
+                        fontSize: 22,
+                        lineHeight: 1.08,
+                        fontWeight: 900,
+                      }}
+                    >
+                      {collection.title}
+                    </h3>
+
+                    <div
+                      style={{
+                        display: 'inline-flex',
+                        background: '#ffffff',
+                        padding: 10,
+                        borderRadius: 18,
+                        border: '1px solid #E5E7EB',
+                      }}
+                    >
+                      <QRCode value={collectionUrl} size={160} />
+                    </div>
+
+                    <p
+                      style={{
+                        margin: '14px 0 0',
+                        color: '#334155',
+                        fontSize: 13,
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.08em',
+                      }}
+                    >
+                      Scan to view this ReelWall collection
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      justifyContent: 'center',
+                      gap: 10,
+                      marginTop: 14,
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={copyCollectionLink}
+                      style={{
+                        border: '1px solid rgba(242, 201, 76, 0.3)',
+                        background: 'rgba(8, 30, 51, 0.72)',
+                        color: '#F2C94C',
+                        borderRadius: 999,
+                        padding: '10px 14px',
+                        fontSize: 13,
+                        fontWeight: 900,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {qrCopied ? 'Copied ✓' : 'Copy Link'}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={downloadQrCode}
+                      style={{
+                        border: 0,
+                        background: '#F2C94C',
+                        color: '#081E33',
+                        borderRadius: 999,
+                        padding: '10px 14px',
+                        fontSize: 13,
+                        fontWeight: 900,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Download QR
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={printQrCode}
+                      style={{
+                        border: '1px solid rgba(255,255,255,0.14)',
+                        background: 'rgba(255,255,255,0.08)',
+                        color: '#F5F7FA',
+                        borderRadius: 999,
+                        padding: '10px 14px',
+                        fontSize: 13,
+                        fontWeight: 900,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Print
+                    </button>
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

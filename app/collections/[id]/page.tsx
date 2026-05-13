@@ -20,11 +20,11 @@ const getPublicImageUrl = (value?: string | null) => {
   }
 
   const cleanPath = value
-    .replace(/^\/+/, '')
-    .replace(/^catches\//, '')
-    .replace(/^public\//, '');
+  .replace(/^\/+/, '')
+  .replace(/^collections\//, '')
+  .replace(/^public\//, '');
 
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
+return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/collections/${cleanPath}`;
 };
 
 export async function generateMetadata({

@@ -48,19 +48,19 @@ export async function generateMetadata({
     const { data: links } = await supabase
       .from('collection_catches')
       .select('catch_id')
-      .eq('collection_id', collectionId)
-      .limit(1);
+      .eq('collection_id', collectionId);
 
-    const firstCatchId = links?.[0]?.catch_id;
+    const catchIds = (links || []).map((link) => link.catch_id);
 
-    if (firstCatchId) {
-      const { data: catchData } = await supabase
+    if (catchIds.length > 0) {
+      const { data: catchRows } = await supabase
         .from('catches')
         .select('image_url')
-        .eq('id', firstCatchId)
-        .single();
+        .in('id', catchIds);
 
-      coverImage = getPublicImageUrl(catchData?.image_url);
+      const firstImageCatch = (catchRows || []).find((item) => item.image_url);
+
+      coverImage = getPublicImageUrl(firstImageCatch?.image_url);
     }
   }
 

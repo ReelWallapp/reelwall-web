@@ -127,9 +127,7 @@ const featuredImage = getPublicImageUrl(featuredMount?.image_url);
             </h1>
 
             <p className={styles.heroText}>
-              ReelWall is a digital trophy wall for anglers to capture fishing
-              memories, mount their best moments, build collections, and preserve
-              the stories that matter most.
+              The angling hub for organizing, preserving, and showcasing fishing memories.
             </p>
 
             <div className={styles.heroActions}>

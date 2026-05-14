@@ -44,79 +44,28 @@
   border-radius: 999px;
 }
 
-.appButton {
-  min-height: 48px;
-  padding: 8px 18px;
-  border-radius: 999px;
+.appStoreBadge {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  color: #081e33;
-  background: #f2c94c;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 800;
-  box-shadow: 0 14px 28px rgba(242, 201, 76, 0.2);
-}.appButton {
-  position: relative;
-  overflow: hidden;
-
-  min-height: 48px;
-  padding: 8px 18px;
-  border-radius: 999px;
-
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-
-  color: #081e33;
-
-  background: linear-gradient(
-    135deg,
-    #f2c94c 0%,
-    #ffd95e 35%,
-    #f2c94c 70%,
-    #d6a92a 100%
-  );
-
-  text-decoration: none;
-
-  font-size: 12px;
-  font-weight: 800;
-
-  border: 1px solid rgba(255, 217, 94, 0.4);
-
-  box-shadow:
-    0 16px 34px rgba(242, 201, 76, 0.26),
-    0 0 22px rgba(242, 201, 76, 0.14);
+  justify-content: center;
 
   transition:
     transform 0.22s ease,
-    box-shadow 0.22s ease;
+    opacity 0.22s ease;
 }
 
-.appButton:hover {
+.appStoreBadge img {
+  height: 58px;
+  width: auto;
+  display: block;
+}
+
+.appStoreBadge:hover {
   transform: translateY(-2px);
-
-  box-shadow:
-    0 22px 42px rgba(242, 201, 76, 0.34),
-    0 0 28px rgba(242, 201, 76, 0.18);
+  opacity: 0.94;
 }
 
-.appButton span:last-child {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-}
 
-.appButton strong {
-  font-size: 15px;
-  font-weight: 950;
-}
-
-.appleIcon {
-  font-size: 23px;
-}
 
 .hero {
   position: relative;

@@ -640,16 +640,16 @@ export default function CollectionDetailClient() {
       <section className={styles.section}>
         <div className={styles.container}>
           <div className={styles.sectionHeader}>
-            <p className={styles.sectionEyebrow}>Collection Catches</p>
+            <p className={styles.sectionEyebrow}>Collection Moments</p>
 
             <h2 className={styles.sectionTitle}>
-              {catches.length === 0 ? 'No catches yet' : 'Collection Catches'}
+              {catches.length === 0 ? 'No catches yet' : 'Angling Memories'}
             </h2>
 
             <p className={styles.sectionText}>
               {catches.length === 0
                 ? 'This collection does not have any catches to show yet.'
-                : 'Open a catch to view the full story and details.'}
+                : 'Open a image to view the full story and details.'}
             </p>
           </div>
 

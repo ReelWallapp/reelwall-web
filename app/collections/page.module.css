@@ -160,22 +160,32 @@
   line-height: 1.65;
 }
 
-.heroPills {
+.heroDownload {
+  margin-top: 26px;
+
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
-  margin-top: 22px;
 }
 
-.heroPills span {
-  padding: 12px 16px;
-  border-radius: 999px;
-  color: #e6edf3;
-  background: rgba(4, 18, 31, 0.58);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 13px;
-  font-weight: 900;
+.appStoreBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  transition:
+    transform 0.22s ease,
+    opacity 0.22s ease;
+}
+
+.appStoreBadge img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+.appStoreBadge:hover {
+  transform: translateY(-2px);
+  opacity: 0.94;
 }
 
 .section {

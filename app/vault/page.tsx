@@ -16,14 +16,13 @@ export default function VaultPage() {
   href="https://apps.apple.com/ca/app/reelwall/id6763661886"
   target="_blank"
   rel="noopener noreferrer"
-  className={styles.appButton}
+  className={styles.appStoreBadge}
 >
-          <span className={styles.appleIcon}></span>
-          <span>
-            <strong>App Store</strong>
-            Download
-          </span>
-        </a>
+  <img
+    src="/App_Store_Badge.svg"
+    alt="Download on the App Store"
+  />
+</a>
       </header>
 
       <section className={styles.hero}>
@@ -58,10 +57,13 @@ export default function VaultPage() {
   href="https://apps.apple.com/ca/app/reelwall/id6763661886"
   target="_blank"
   rel="noopener noreferrer"
-  className={styles.primaryButton}
+  className={styles.appStoreBadge}
 >
-              Download on the App Store
-            </a>
+  <img
+    src="/App_Store_Badge.svg"
+    alt="Download on the App Store"
+  />
+</a>
 
             <Link href="/collections" className={styles.secondaryButton}>
               Explore Collections

@@ -1,8 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
+import styles from './page.module.css';
 
 export default function CatchDetailPage() {
   const params = useParams();
@@ -63,12 +65,12 @@ export default function CatchDetailPage() {
   const shareCatch = async () => {
     try {
       const url = window.location.href;
-      const title = catchItem?.place_name || 'ReelWall Catch';
+      const title = catchItem?.place_name || 'ReelWall Moment';
       const text = catchItem?.note
         ? `${catchItem.note.slice(0, 140)}${
             catchItem.note.length > 140 ? '...' : ''
           }`
-        : 'Check out this catch on ReelWall.';
+        : 'Check out this fishing memory on ReelWall.';
 
       if (navigator.share) {
         await navigator.share({
@@ -110,7 +112,10 @@ export default function CatchDetailPage() {
 
     if (value.startsWith('/')) return value;
 
-    const cleanPath = value.replace(/^\/+/, '').replace(/^catches\//, '');
+    const cleanPath = value
+      .replace(/^\/+/, '')
+      .replace(/^catches\//, '')
+      .replace(/^public\//, '');
 
     return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/catches/${cleanPath}`;
   };
@@ -133,31 +138,16 @@ export default function CatchDetailPage() {
     }
   };
 
-  const weatherText =
-    catchItem?.weather_temp !== undefined &&
-    catchItem?.weather_temp !== null &&
-    catchItem?.weather_description
-      ? `${catchItem.weather_temp}°C • ${catchItem.weather_description}`
-      : catchItem?.weather_description || '';
-
   const displayDate = catchItem?.catch_date || catchItem?.created_at || '';
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#081E33] text-white">
-        <section className="flex min-h-screen items-center justify-center px-6">
-          <div className="rounded-[28px] border border-[#F2C94C]/20 bg-[#102C47] px-8 py-10 text-center shadow-2xl">
-            <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-[#F2C94C]">
-              REELWALL
-            </p>
-
-            <h1 className="text-3xl font-black tracking-[-0.04em]">
-              Loading catch...
-            </h1>
-
-            <p className="mt-3 text-sm font-semibold text-[#A5B3C2]">
-              Pulling in the story from the water.
-            </p>
+      <main className={styles.page}>
+        <section className={styles.centerState}>
+          <div className={styles.stateCard}>
+            <p className={styles.eyebrow}>REELWALL</p>
+            <h1>Loading moment...</h1>
+            <p>Pulling in the story from the water.</p>
           </div>
         </section>
       </main>
@@ -166,20 +156,16 @@ export default function CatchDetailPage() {
 
   if (!catchItem) {
     return (
-      <main className="min-h-screen bg-[#081E33] text-white">
-        <section className="flex min-h-screen items-center justify-center px-6">
-          <div className="rounded-[28px] border border-[#F2C94C]/20 bg-[#102C47] px-8 py-10 text-center shadow-2xl">
-            <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-[#F2C94C]">
-              REELWALL
-            </p>
+      <main className={styles.page}>
+        <section className={styles.centerState}>
+          <div className={styles.stateCard}>
+            <p className={styles.eyebrow}>REELWALL</p>
+            <h1>Moment not found</h1>
+            <p>This ReelWall moment could not be loaded.</p>
 
-            <h1 className="text-3xl font-black tracking-[-0.04em]">
-              Catch not found
-            </h1>
-
-            <p className="mt-3 text-sm font-semibold text-[#A5B3C2]">
-              This catch could not be loaded.
-            </p>
+            <Link href="/collections" className={styles.primaryButton}>
+              Explore Collections
+            </Link>
           </div>
         </section>
       </main>
@@ -187,178 +173,185 @@ export default function CatchDetailPage() {
   }
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#081E33] text-white">
-      <section className="relative overflow-hidden border-b border-[#264F75]/40 bg-gradient-to-b from-[#071C31] to-[#081E33]">
-        <div className="pointer-events-none absolute right-[8%] top-16 h-96 w-96 rounded-full bg-[#F2C94C]/10 blur-3xl" />
-        <div className="pointer-events-none absolute -right-32 top-64 h-[30rem] w-[30rem] rounded-full bg-[#1C466C]/30 blur-3xl" />
+    <main className={styles.page}>
+      <section className={styles.hero}>
+        <div className={styles.heroGlowOne} />
+        <div className={styles.heroGlowTwo} />
 
-        <div className="relative z-10 mx-auto max-w-6xl px-6 py-8 md:py-12">
-          <button
-            type="button"
-            onClick={handleBack}
-            className="mb-8 inline-flex min-h-11 items-center rounded-full border border-white/10 bg-[#04121F]/60 px-5 text-sm font-black text-[#E6EDF3] backdrop-blur transition hover:border-[#F2C94C]/30 hover:text-[#F2C94C]"
-          >
-            ← Back
-          </button>
+        <div className={styles.container}>
+          <nav className={styles.nav}>
+            <Link href="/" className={styles.brand}>
+              <span className={styles.logoBadge}>
+                <img src="/logo.png" alt="ReelWall logo" className={styles.navLogo} />
+              </span>
 
-          <div className="mx-auto max-w-4xl text-center">
-            <p className="mb-4 text-xs font-black uppercase tracking-[0.22em] text-[#F2C94C]">
-              REELWALL CATCH
+              <span>REELWALL</span>
+            </Link>
+
+            <div className={styles.navLinks}>
+              <Link href="/collections">Collections</Link>
+              <Link href="/vault">Vault</Link>
+              <Link href="/news">News</Link>
+              <Link href="/about">About</Link>
+            </div>
+          </nav>
+
+          <div className={styles.backRow}>
+            <button
+              type="button"
+              onClick={handleBack}
+              className={styles.backButton}
+            >
+              ← Back
+            </button>
+          </div>
+
+          <div className={styles.heroInner}>
+            <p className={styles.eyebrow}>REELWALL MOMENT</p>
+
+            <h1>Every fish has a story.</h1>
+
+            <p className={styles.heroText}>
+              A mounted fishing memory from ReelWall — captured, shared, and
+              remembered.
             </p>
 
-            <h1 className="text-5xl font-black leading-[0.95] tracking-[-0.065em] md:text-7xl">
-              Wall-worthy.
-            </h1>
-
-            <p className="mx-auto mt-6 max-w-2xl text-lg font-medium leading-8 text-[#C0CEDB]">
-              Because some moments deserve more than a camera roll.
-            </p>
-
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <div className={styles.heroMeta}>
               {catchItem.is_personal_best ? (
-                <span className="inline-flex min-h-11 items-center rounded-full bg-[#F2C94C] px-5 text-sm font-black uppercase tracking-wide text-[#081E33] shadow-lg shadow-[#F2C94C]/15">
-                  Personal Best
-                </span>
+                <span className={styles.goldPill}>Personal Best</span>
               ) : null}
 
-              {displayDate ? (
-                <span className="inline-flex min-h-11 items-center rounded-full border border-white/10 bg-[#04121F]/60 px-5 text-sm font-black text-[#E6EDF3]">
-                  {formatDate(displayDate)}
-                </span>
-              ) : null}
+              {displayDate ? <span>{formatDate(displayDate)}</span> : null}
 
-              {catchItem.place_name ? (
-                <span className="inline-flex min-h-11 items-center rounded-full border border-white/10 bg-[#04121F]/60 px-5 text-sm font-black text-[#E6EDF3]">
-                  {catchItem.place_name}
-                </span>
-              ) : null}
+              {catchItem.place_name ? <span>{catchItem.place_name}</span> : null}
 
-              <button
-                type="button"
-                onClick={shareCatch}
-                className="inline-flex min-h-11 items-center rounded-full bg-[#F2C94C] px-5 text-sm font-black text-[#081E33] shadow-lg shadow-[#F2C94C]/15 transition hover:-translate-y-0.5 hover:opacity-95"
-              >
-                {shareCopied ? 'Link Copied ✓' : 'Share Catch'}
+              <button type="button" onClick={shareCatch}>
+                {shareCopied ? 'Link Copied ✓' : 'Share'}
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-10 md:py-14">
-        <div className="overflow-hidden rounded-[34px] border border-[#F2C94C]/20 bg-[#102C47] shadow-2xl shadow-black/20">
-          {catchItem.image_url ? (
-            <div className="flex w-full items-center justify-center bg-[#081E33] p-3 md:p-5">
-              <img
-                src={getPublicImageUrl(catchItem.image_url)}
-                alt="ReelWall catch"
-                className="max-h-[760px] w-full rounded-[24px] object-contain"
-                onError={(e) => {
-                  e.currentTarget.src = '/logo.png';
-                }}
-              />
-            </div>
-          ) : (
-            <div className="flex h-96 w-full items-center justify-center bg-[#081E33] text-sm font-bold text-[#A5B3C2]">
-              No image
-            </div>
-          )}
-
-          <div className="grid gap-8 p-6 md:grid-cols-[0.85fr_1.15fr] md:p-8">
-            <div>
-              <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-[#F2C94C]">
-                Catch Details
-              </p>
-
-              <div className="space-y-3">
-                {catchItem.place_name ? (
-                  <div className="rounded-2xl border border-white/5 bg-[#081E33]/70 p-4">
-                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8FA3B8]">
-                      Location
-                    </p>
-                    <p className="mt-1 text-base font-black text-white">
-                      {catchItem.place_name}
-                    </p>
-                  </div>
-                ) : null}
-
-                {displayDate ? (
-                  <div className="rounded-2xl border border-white/5 bg-[#081E33]/70 p-4">
-                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8FA3B8]">
-                      Date
-                    </p>
-                    <p className="mt-1 text-base font-black text-white">
-                      {formatDate(displayDate)}
-                    </p>
-                  </div>
-                ) : null}
-
-                {weatherText ? (
-                  <div className="rounded-2xl border border-white/5 bg-[#081E33]/70 p-4">
-                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8FA3B8]">
-                      Weather
-                    </p>
-                    <p className="mt-1 text-base font-black text-white">
-                      {weatherText}
-                    </p>
-                  </div>
-                ) : null}
-              </div>
+      <section className={styles.detailSection}>
+        <div className={styles.container}>
+          <div className={styles.detailPanel}>
+            <div className={styles.imagePanel}>
+              {catchItem.image_url ? (
+                <img
+                  src={getPublicImageUrl(catchItem.image_url)}
+                  alt="ReelWall fishing memory"
+                  className={styles.catchImage}
+                  onError={(e) => {
+                    e.currentTarget.src = '/logo.png';
+                  }}
+                />
+              ) : (
+                <div className={styles.noImage}>No image</div>
+              )}
             </div>
 
-            <div>
-              <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-[#F2C94C]">
-                Story
-              </p>
+            <div className={styles.contentGrid}>
+              <aside className={styles.detailsColumn}>
+                <p className={styles.sectionEyebrow}>Details</p>
 
-              <div className="min-h-52 rounded-[24px] border border-white/5 bg-[#081E33]/70 p-5">
-                {catchItem.note ? (
-                  <p className="whitespace-pre-wrap text-base font-medium leading-8 text-[#D7E2EC]">
-                    {catchItem.note}
-                  </p>
-                ) : (
-                  <p className="text-base font-medium leading-8 text-[#8FA3B8]">
-                    No story added for this catch yet.
-                  </p>
-                )}
-              </div>
+                <div className={styles.detailCards}>
+                  {catchItem.place_name ? (
+                    <div className={styles.detailCard}>
+                      <span>Location</span>
+                      <strong>{catchItem.place_name}</strong>
+                    </div>
+                  ) : null}
 
-              <div className="mt-5 flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  onClick={shareCatch}
-                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#F2C94C] px-5 text-sm font-black text-[#081E33] transition hover:-translate-y-0.5 hover:opacity-95"
-                >
-                  {shareCopied ? 'Link Copied ✓' : 'Share This Catch'}
-                </button>
+                  {catchItem.region_name ? (
+                    <div className={styles.detailCard}>
+                      <span>Region</span>
+                      <strong>{catchItem.region_name}</strong>
+                    </div>
+                  ) : null}
 
-                <button
-                  type="button"
-                  onClick={handleBack}
-                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#F2C94C]/25 bg-[#0B253D] px-5 text-sm font-black text-white transition hover:border-[#F2C94C]/45"
-                >
-                  Back to Collection
-                </button>
-              </div>
+                  {displayDate ? (
+                    <div className={styles.detailCard}>
+                      <span>Date</span>
+                      <strong>{formatDate(displayDate)}</strong>
+                    </div>
+                  ) : null}
+
+                  {catchItem.is_personal_best ? (
+                    <div className={styles.detailCard}>
+                      <span>Badge</span>
+                      <strong>Personal Best</strong>
+                    </div>
+                  ) : null}
+                </div>
+              </aside>
+
+              <section className={styles.storyColumn}>
+                <p className={styles.sectionEyebrow}>Story</p>
+
+                <div className={styles.storyCard}>
+                  {catchItem.note ? (
+                    <p>{catchItem.note}</p>
+                  ) : (
+                    <p className={styles.emptyStory}>
+                      No story added for this moment yet.
+                    </p>
+                  )}
+                </div>
+
+                <div className={styles.actions}>
+                  <button
+                    type="button"
+                    onClick={shareCatch}
+                    className={styles.primaryButton}
+                  >
+                    {shareCopied ? 'Link Copied ✓' : 'Share This Moment'}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className={styles.secondaryButton}
+                  >
+                    Back to Collection
+                  </button>
+                </div>
+              </section>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="border-t border-[#264F75]/40 bg-[#061421]">
-        <div className="mx-auto max-w-5xl px-6 py-12 text-center">
-          <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-[#F2C94C]">
-            BUILT WITH REELWALL
-          </p>
+      <section className={styles.footerBand}>
+        <div className={styles.container}>
+          <div className={styles.footerBandInner}>
+            <p className={styles.eyebrow}>BUILT WITH REELWALL</p>
 
-          <h3 className="text-3xl font-black tracking-[-0.045em] md:text-5xl">
-            Preserve the story, not just the photo.
-          </h3>
+            <h2>Preserve the story, not just the photo.</h2>
 
-          <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-8 text-[#9FB0C1]">
-            ReelWall helps anglers capture, organize, and showcase real moments
-            from the water.
-          </p>
+            <p>
+              ReelWall helps anglers capture, organize, mount, and preserve real
+              moments from the water.
+            </p>
+
+            <div className={styles.footerActions}>
+              <a
+                href="https://apps.apple.com/ca/app/reelwall/id6763661886"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.appStoreBadge}
+              >
+                <img
+                  src="/App_Store_Badge.svg"
+                  alt="Download on the App Store"
+                />
+              </a>
+
+              <Link href="/collections" className={styles.secondaryButton}>
+                Explore Collections
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </main>

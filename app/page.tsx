@@ -148,16 +148,16 @@ const featuredImage = getPublicImageUrl(featuredMount?.image_url);
               </Link>
 
               <a
-                href="https://apps.apple.com/ca/app/reelwall/id6763661886"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.downloadPill}
-              >
-                <span>
-                  <strong>App Store</strong>
-                  Download Now
-                </span>
-              </a>
+  href="https://apps.apple.com/ca/app/reelwall/id6763661886"
+  target="_blank"
+  rel="noopener noreferrer"
+  className={styles.appStoreBadge}
+>
+  <img
+    src="/App_Store_Badge.svg"
+    alt="Download on the App Store"
+  />
+</a>
             </div>
           </div>
         </div>
@@ -245,7 +245,65 @@ const featuredImage = getPublicImageUrl(featuredMount?.image_url);
         </div>
       </section>
 
-      
+    
+
+<section className={styles.founderSection}>
+  <div className={styles.container}>
+    <div className={styles.founderCard}>
+      <div className={styles.founderContent}>
+        <div className={styles.founderTop}>
+          <div className={styles.founderLogoWrap}>
+            <img
+              src="/logo.png"
+              alt="ReelWall logo"
+              className={styles.founderLogo}
+            />
+          </div>
+
+          <p className={styles.eyebrow}>FOUNDER STORY</p>
+        </div>
+
+        <h2>
+          Built by an angler who got tired of losing the memories.
+        </h2>
+
+        <p>
+          ReelWall started from a simple problem: fishing memories were getting
+          buried in camera rolls, old phones, folders, and social feeds.
+        </p>
+
+        <p>
+          I wanted a better place for anglers to capture the moments from the
+          water, tell the story behind them, organize collections, and preserve
+          the ones worth remembering.
+        </p>
+
+        <p className={styles.founderSignature}>
+          — Phil, Founder of ReelWall
+        </p>
+
+        <div className={styles.founderActions}>
+          <Link
+            href="/news/why-we-built-reelwall"
+            className={styles.primaryButton}
+          >
+            Read The Full Story
+          </Link>
+        </div>
+      </div>
+
+      <div className={styles.founderImageSide}>
+        <img
+          src="/founder-story.png"
+          alt="Founder of ReelWall"
+          className={styles.founderImage}
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+    
 
       <section className={styles.previewSection}>
         <div className={styles.container}>

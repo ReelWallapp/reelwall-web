@@ -237,11 +237,19 @@ export default function CollectionsPage() {
               species, family memories, and the catches that deserve to be remembered.
             </p>
 
-            <div className={styles.heroPills}>
-              <span>Collections</span>
-              <span>Stories</span>
-              <span>Mounted Moments</span>
-            </div>
+            <div className={styles.heroDownload}>
+  <a
+    href="https://apps.apple.com/ca/app/reelwall/id6763661886"
+    target="_blank"
+    rel="noopener noreferrer"
+    className={styles.appStoreBadge}
+  >
+    <img
+      src="/App_Store_Badge.svg"
+      alt="Download on the App Store"
+    />
+  </a>
+</div>
           </div>
         </div>
       </section>
